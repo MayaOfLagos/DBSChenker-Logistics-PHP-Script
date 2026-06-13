@@ -1,0 +1,107 @@
+For more scripts vist our website
+
+How to Install Shippy Express Pro v3.3 
+Follow these simple steps to install Shippy Express v3.3 on any s hosting account that supports PHP & MySQL:
+
+✅ Requirements
+Before you begin, ensure your hosting has:
+
+PHP 8.1 or higher
+
+MySQL 5.7 or higher
+
+
+
+🧾 Step-by-Step Installation
+1. Upload the Script
+Login to your cPanel.
+
+Open File Manager.
+
+Navigate to the public_html/ folder (or your subdomain folder).
+
+Upload the Shippy Express.zip file and extract it.
+
+2. Create a Database
+Go to MySQL® Databases in cPanel.
+
+Create a new database, username, and assign the user to the database with All Privileges.
+
+Save the DB name, username, and password.
+
+3. Configure .env File
+In the extracted folder, locate the .env file.
+
+
+Edit the .env file with your database details:
+
+APP_NAME="Shippy Express"
+APP_URL=http://yourdomain.com
+
+DB_HOST=localhost
+DB_DATABASE=your_db_name
+DB_USERNAME=your_db_user
+DB_PASSWORD=your_db_password
+
+site will be up 
+admin details is 
+E.g www.developerplug.com/adminlogin/validate_admin
+support@developerplug.com
+12345678
+
+ Note: If you want turn on Customs Clearance Document Required Notification on the tracking result page  you need to update shipment status to Customs
+
+
+script details
+ Key Features
+✅ Admin Courier Management Panel
+→ Create, update, and delete shipments easily
+
+✅ Auto-Generated Tracking Code
+→ Includes site initials for brand identity (e.g., RE123XYZ9)
+
+✅ Real-Time Shipment Tracking
+→ Users can track via tracking code
+→ Map view shows origin, current location, and destination
+→ Timeline of updates
+
+✅ Interactive Map (Leaflet.js)
+→ Displays origin, live location, and destination with custom icons
+
+✅ Shipment Timeline & Comments
+→ Status updates with date, time, location, and internal notes
+
+✅ Email Notifications
+→ Automatic email to sender & receiver on:
+
+Courier creation
+
+New updates added
+
+✅ Permit Requirement Handling
+→ Define permits (e.g., customs) that must be cleared before delivery
+
+✅ Print Shipping Invoice
+→ Generate PDF-style invoice with all shipment details
+
+✅ Image Upload for Packages
+→ Attach package photos at creation time
+
+✅ Mobile-Responsive UI (Tailwind CSS)
+→ Works seamlessly across all devices
+
+🛠️ Built With
+Laravel 10
+
+Tailwind CSS
+
+AlpineJS
+
+Leaflet.js (Map)
+
+Blade Template Engine
+
+FontAwesome Icons
+
+For more scripts visit our website
+
