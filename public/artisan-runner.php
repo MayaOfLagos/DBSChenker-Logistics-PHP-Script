@@ -9,9 +9,9 @@ define('PASSWORD', 'dbschenker2026!');
 define('BASE_DIR', dirname(__DIR__));
 define('PHP_BIN', '/usr/local/bin/php');
 
-$authenticated = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
-
 session_start();
+
+$authenticated = isset($_SESSION['auth']) && $_SESSION['auth'] === true;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['password'])) {
     if ($_POST['password'] === PASSWORD) {
