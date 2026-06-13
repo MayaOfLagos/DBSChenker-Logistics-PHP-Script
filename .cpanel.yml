@@ -1,0 +1,9 @@
+---
+deployment:
+  tasks:
+    - /usr/local/bin/php $CPANEL_BASE_DIR/artisan storage:link --force
+    - /usr/local/bin/php $CPANEL_BASE_DIR/artisan config:clear
+    - /usr/local/bin/php $CPANEL_BASE_DIR/artisan route:clear
+    - /usr/local/bin/php $CPANEL_BASE_DIR/artisan view:clear
+    - /usr/local/bin/php $CPANEL_BASE_DIR/artisan optimize
+    - /usr/local/bin/php $CPANEL_BASE_DIR/artisan migrate --force
