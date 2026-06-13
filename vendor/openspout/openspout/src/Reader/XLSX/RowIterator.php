@@ -194,7 +194,7 @@ final class RowIterator implements RowIteratorInterface
             if ($this->lastRowIndexProcessed !== $this->nextRowIndexToBeProcessed) {
                 // return empty row if mismatch between last processed row
                 // and the row that needs to be returned
-                $rowToBeProcessed = new Row([]);
+                $rowToBeProcessed = new Row([], null);
             }
         }
 
@@ -257,7 +257,7 @@ final class RowIterator implements RowIteratorInterface
      */
     private function readDataForNextRow(): void
     {
-        $this->currentlyProcessedRow = new Row([]);
+        $this->currentlyProcessedRow = new Row([], null);
 
         $this->xmlProcessor->readUntilStopped();
 
@@ -297,13 +297,13 @@ final class RowIterator implements RowIteratorInterface
         // Read spans info if present
         $numberOfColumnsForRow = $this->numColumns;
         $spans = $xmlReader->getAttribute(self::XML_ATTRIBUTE_SPANS); // returns '1:5' for instance
-        if (0 === $this->numColumns && null !== $spans && '' !== $spans) {
+        if (null !== $spans && '' !== $spans) {
             [, $numberOfColumnsForRow] = explode(':', $spans);
             $numberOfColumnsForRow = (int) $numberOfColumnsForRow;
         }
 
         $cells = array_fill(0, $numberOfColumnsForRow, Cell::fromValue(''));
-        $this->currentlyProcessedRow = $this->currentlyProcessedRow->withCells($cells);
+        $this->currentlyProcessedRow->setCells($cells);
 
         return XMLProcessor::PROCESSING_CONTINUE;
     }
@@ -322,9 +322,7 @@ final class RowIterator implements RowIteratorInterface
         \assert($node instanceof DOMElement);
         $cell = $this->cellValueFormatter->extractAndFormatNodeValue($node);
 
-        $cells = $this->currentlyProcessedRow->cells;
-        $cells[$currentColumnIndex] = $cell;
-        $this->currentlyProcessedRow = $this->currentlyProcessedRow->withCells($cells);
+        $this->currentlyProcessedRow->setCellAtIndex($cell, $currentColumnIndex);
         $this->lastColumnIndexProcessed = $currentColumnIndex;
 
         return XMLProcessor::PROCESSING_CONTINUE;
@@ -345,7 +343,7 @@ final class RowIterator implements RowIteratorInterface
 
         // If needed, we fill the empty cells
         if (0 === $this->numColumns) {
-            $this->currentlyProcessedRow = $this->rowManager->fillMissingIndexesWithEmptyCells($this->currentlyProcessedRow);
+            $this->rowManager->fillMissingIndexesWithEmptyCells($this->currentlyProcessedRow);
         }
 
         // at this point, we have all the data we need for the row

@@ -9,7 +9,7 @@ use DateTimeInterface;
 /**
  * @internal
  */
-final readonly class DateHelper
+final class DateHelper
 {
     /**
      * @see https://github.com/PHPOffice/PhpSpreadsheet/blob/1.22.0/src/PhpSpreadsheet/Shared/Date.php#L296

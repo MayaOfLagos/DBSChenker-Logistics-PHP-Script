@@ -10,56 +10,49 @@ use OpenSpout\Writer\XLSX\Options\HeaderFooter;
 use OpenSpout\Writer\XLSX\Options\PageMargin;
 use OpenSpout\Writer\XLSX\Options\PageSetup;
 use OpenSpout\Writer\XLSX\Options\WorkbookProtection;
-use OpenSpout\Writer\XLSX\Validation\DataValidationRuleInterface;
-use OpenSpout\Writer\XLSX\Validation\ValidationContainer;
-use OpenSpout\Writer\XLSX\Validation\ValidationDisplay;
-use OpenSpout\Writer\XLSX\Validation\ValidationRule;
 
-final readonly class Options extends AbstractOptions
+final class Options extends AbstractOptions
 {
-    public const int DEFAULT_FONT_SIZE = 12;
-    public const string DEFAULT_FONT_NAME = 'Calibri';
+    public const DEFAULT_FONT_SIZE = 12;
+    public const DEFAULT_FONT_NAME = 'Calibri';
 
-    private MergeCellContainer $MERGE_CELLS;
-    private ValidationContainer $VALIDATION_CELLS;
+    public bool $SHOULD_USE_INLINE_STRINGS = true;
 
-    public function __construct(
-        Style $FALLBACK_STYLE = new Style(
-            fontSize: self::DEFAULT_FONT_SIZE,
-            fontName: self::DEFAULT_FONT_NAME,
-        ),
-        bool $SHOULD_CREATE_NEW_SHEETS_AUTOMATICALLY = true,
-        ?float $DEFAULT_COLUMN_WIDTH = null,
-        ?float $DEFAULT_ROW_HEIGHT = null,
-        ?string $tempFolder = null,
-        public bool $SHOULD_USE_INLINE_STRINGS = true,
-        public ?PageMargin $pageMargin = null,
-        public ?PageSetup $pageSetup = null,
-        public ?HeaderFooter $headerFooter = null,
-        public ?WorkbookProtection $workbookProtection = null,
-        public Properties $properties = new Properties(),
-    ) {
-        parent::__construct(
-            $FALLBACK_STYLE,
-            $SHOULD_CREATE_NEW_SHEETS_AUTOMATICALLY,
-            $DEFAULT_COLUMN_WIDTH,
-            $DEFAULT_ROW_HEIGHT,
-            $tempFolder,
-        );
+    /** @var MergeCell[] */
+    private array $MERGE_CELLS = [];
 
-        $this->MERGE_CELLS = new MergeCellContainer();
-        $this->VALIDATION_CELLS = new ValidationContainer();
+    private ?PageMargin $pageMargin = null;
+
+    private ?PageSetup $pageSetup = null;
+
+    private ?HeaderFooter $headerFooter = null;
+
+    private ?WorkbookProtection $workbookProtection = null;
+
+    private Properties $properties;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $defaultRowStyle = new Style();
+        $defaultRowStyle->setFontSize(self::DEFAULT_FONT_SIZE);
+        $defaultRowStyle->setFontName(self::DEFAULT_FONT_NAME);
+
+        $this->DEFAULT_ROW_STYLE = $defaultRowStyle;
+
+        $this->properties = new Properties();
     }
 
     /**
      * Row coordinates are indexed from 1, columns from 0 (A = 0),
      * so a merge B2:G2 looks like $writer->mergeCells(1, 2, 6, 2);.
      *
-     * @param non-negative-int $topLeftColumn
-     * @param positive-int     $topLeftRow
-     * @param non-negative-int $bottomRightColumn
-     * @param positive-int     $bottomRightRow
-     * @param non-negative-int $sheetIndex
+     * @param 0|positive-int $topLeftColumn
+     * @param positive-int   $topLeftRow
+     * @param 0|positive-int $bottomRightColumn
+     * @param positive-int   $bottomRightRow
+     * @param 0|positive-int $sheetIndex
      */
     public function mergeCells(
         int $topLeftColumn,
@@ -68,62 +61,72 @@ final readonly class Options extends AbstractOptions
         int $bottomRightRow,
         int $sheetIndex = 0,
     ): void {
-        $this->MERGE_CELLS->append(new MergeCell(
+        $this->MERGE_CELLS[] = new MergeCell(
             $sheetIndex,
             $topLeftColumn,
             $topLeftRow,
             $bottomRightColumn,
             $bottomRightRow
-        ));
+        );
     }
 
     /**
-     * @return list<MergeCell>
+     * @return MergeCell[]
      *
      * @internal
      */
     public function getMergeCells(): array
     {
-        return $this->MERGE_CELLS->get();
+        return $this->MERGE_CELLS;
     }
 
-    /**
-     * Row coordinates are indexed from 1, columns from 0 (A = 0),
-     * so a validation on B2:G10 looks like $options->addValidation(1, 2, 6, 10, new ListValidationRule([...]));.
-     *
-     * @param non-negative-int $topLeftColumn
-     * @param positive-int     $topLeftRow
-     * @param non-negative-int $bottomRightColumn
-     * @param positive-int     $bottomRightRow
-     * @param non-negative-int $sheetIndex
-     */
-    public function addValidation(
-        int $topLeftColumn,
-        int $topLeftRow,
-        int $bottomRightColumn,
-        int $bottomRightRow,
-        DataValidationRuleInterface $rule,
-        ValidationDisplay $validation_display = new ValidationDisplay(),
-        int $sheetIndex = 0,
-    ): void {
-        $this->VALIDATION_CELLS->append(new ValidationRule(
-            $sheetIndex,
-            $topLeftColumn,
-            $topLeftRow,
-            $bottomRightColumn,
-            $bottomRightRow,
-            $rule,
-            $validation_display,
-        ));
-    }
-
-    /**
-     * @return list<ValidationRule>
-     *
-     * @internal
-     */
-    public function getValidationRules(): array
+    public function setPageMargin(PageMargin $pageMargin): void
     {
-        return $this->VALIDATION_CELLS->get();
+        $this->pageMargin = $pageMargin;
+    }
+
+    public function getPageMargin(): ?PageMargin
+    {
+        return $this->pageMargin;
+    }
+
+    public function setPageSetup(PageSetup $pageSetup): void
+    {
+        $this->pageSetup = $pageSetup;
+    }
+
+    public function getPageSetup(): ?PageSetup
+    {
+        return $this->pageSetup;
+    }
+
+    public function setHeaderFooter(HeaderFooter $headerFooter): void
+    {
+        $this->headerFooter = $headerFooter;
+    }
+
+    public function getHeaderFooter(): ?HeaderFooter
+    {
+        return $this->headerFooter;
+    }
+
+    public function getWorkbookProtection(): ?WorkbookProtection
+    {
+        return $this->workbookProtection;
+    }
+
+    public function setWorkbookProtection(WorkbookProtection $workbookProtection): void
+    {
+        $this->workbookProtection = $workbookProtection;
+    }
+
+    public function getProperties(): Properties
+    {
+        return $this->properties;
+    }
+
+    public function setProperties(Properties $properties): void
+    {
+        $this->properties = $properties;
     }
 }

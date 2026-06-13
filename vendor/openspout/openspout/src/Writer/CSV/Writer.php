@@ -67,15 +67,14 @@ final class Writer extends AbstractWriter
             }
 
             return (string) $value->getValue();
-        }, $row->cells);
+        }, $row->getCells());
 
         $wasWriteSuccessful = fputcsv(
             $this->filePointer,
             $cells,
             $this->options->FIELD_DELIMITER,
             $this->options->FIELD_ENCLOSURE,
-            '',
-            $this->options->EOL,
+            ''
         );
         if (false === $wasWriteSuccessful) {
             throw new IOException('Unable to write data'); // @codeCoverageIgnore

@@ -6,6 +6,7 @@ namespace OpenSpout\Writer\XLSX\Manager;
 
 use OpenSpout\Writer\Common\Entity\Workbook;
 use OpenSpout\Writer\Common\Manager\AbstractWorkbookManager;
+use OpenSpout\Writer\Common\Manager\Style\StyleMerger;
 use OpenSpout\Writer\XLSX\Helper\FileSystemHelper;
 use OpenSpout\Writer\XLSX\Manager\Style\StyleManager;
 use OpenSpout\Writer\XLSX\Options;
@@ -32,14 +33,15 @@ final class WorkbookManager extends AbstractWorkbookManager
         Options $options,
         WorksheetManager $worksheetManager,
         StyleManager $styleManager,
-        FileSystemHelper $fileSystemHelper,
-        private readonly HyperlinkManager $hyperlinkManager
+        StyleMerger $styleMerger,
+        FileSystemHelper $fileSystemHelper
     ) {
         parent::__construct(
             $workbook,
             $options,
             $worksheetManager,
             $styleManager,
+            $styleMerger,
             $fileSystemHelper
         );
     }
@@ -70,12 +72,12 @@ final class WorkbookManager extends AbstractWorkbookManager
         $worksheets = $this->getWorksheets();
 
         $this->fileSystemHelper
-            ->createContentFiles($this->options, $worksheets, $this->hyperlinkManager)
+            ->createContentFiles($this->options, $worksheets)
             ->deleteWorksheetTempFolder()
             ->createContentTypesFile($worksheets)
             ->createWorkbookFile($this->options, $worksheets)
             ->createWorkbookRelsFile($worksheets)
-            ->createWorksheetRelsFiles($worksheets, $this->hyperlinkManager)
+            ->createWorksheetRelsFiles($worksheets)
             ->createStylesFile($this->styleManager)
             ->zipRootFolderAndCopyToStream($finalFilePointer)
         ;

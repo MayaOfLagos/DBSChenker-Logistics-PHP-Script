@@ -20,7 +20,7 @@
         "laravel/socialite": "^5.27",
         "laravel/tinker": "^2.10",
         "livewire/livewire": "^3.6",
-        "openspout/openspout": "^5.7",
+        "openspout/openspout": "^4.0",
         "stripe/stripe-php": "^20.0"
     },
     "require-dev": {
@@ -33,7 +33,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.3.0"
+        }
     },
     "extra": {
         "laravel": {

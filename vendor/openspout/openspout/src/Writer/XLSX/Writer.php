@@ -9,15 +9,14 @@ use OpenSpout\Common\Helper\StringHelper;
 use OpenSpout\Writer\AbstractWriterMultiSheets;
 use OpenSpout\Writer\Common\Entity\Workbook;
 use OpenSpout\Writer\Common\Helper\ZipHelper;
+use OpenSpout\Writer\Common\Manager\Style\StyleMerger;
 use OpenSpout\Writer\XLSX\Helper\FileSystemHelper;
 use OpenSpout\Writer\XLSX\Manager\CommentsManager;
-use OpenSpout\Writer\XLSX\Manager\HyperlinkManager;
 use OpenSpout\Writer\XLSX\Manager\SharedStringsManager;
 use OpenSpout\Writer\XLSX\Manager\Style\StyleManager;
 use OpenSpout\Writer\XLSX\Manager\Style\StyleRegistry;
 use OpenSpout\Writer\XLSX\Manager\WorkbookManager;
 use OpenSpout\Writer\XLSX\Manager\WorksheetManager;
-use RuntimeException;
 
 final class Writer extends AbstractWriterMultiSheets
 {
@@ -38,7 +37,19 @@ final class Writer extends AbstractWriterMultiSheets
 
     public function setCreator(string $creator): void
     {
-        throw new RuntimeException('Method unsopported for XLSX documents: use the Options properties instead.');
+        $props = $this->options->getProperties();
+        $this->options->setProperties(new Properties(
+            $props->title,
+            $props->subject,
+            $props->application,
+            $creator,
+            $props->lastModifiedBy,
+            $props->keywords,
+            $props->description,
+            $props->category,
+            $props->language,
+            $props->customProperties
+        ));
     }
 
     protected function createWorkbookManager(): WorkbookManager
@@ -46,31 +57,31 @@ final class Writer extends AbstractWriterMultiSheets
         $workbook = new Workbook();
 
         $fileSystemHelper = new FileSystemHelper(
-            $this->options->tempFolder,
+            $this->options->getTempFolder(),
             new ZipHelper(),
             new XLSX(),
-            $this->options->properties,
+            $this->options->getProperties()
         );
         $fileSystemHelper->createBaseFilesAndFolders();
 
         $xlFolder = $fileSystemHelper->getXlFolder();
         $sharedStringsManager = new SharedStringsManager($xlFolder, new XLSX());
 
+        $styleMerger = new StyleMerger();
         $escaper = new XLSX();
 
         $styleManager = new StyleManager(
-            new StyleRegistry($this->options->FALLBACK_STYLE),
+            new StyleRegistry($this->options->DEFAULT_ROW_STYLE),
             $escaper
         );
 
         $commentsManager = new CommentsManager($xlFolder, new XLSX());
-        $hyperlinkManager = new HyperlinkManager();
 
         $worksheetManager = new WorksheetManager(
             $this->options,
             $styleManager,
+            $styleMerger,
             $commentsManager,
-            $hyperlinkManager,
             $sharedStringsManager,
             $escaper,
             StringHelper::factory()
@@ -81,8 +92,8 @@ final class Writer extends AbstractWriterMultiSheets
             $this->options,
             $worksheetManager,
             $styleManager,
-            $fileSystemHelper,
-            $hyperlinkManager
+            $styleMerger,
+            $fileSystemHelper
         );
     }
 }

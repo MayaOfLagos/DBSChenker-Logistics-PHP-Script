@@ -7,186 +7,214 @@ namespace OpenSpout\Writer\XLSX\Entity;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Reader\XLSX\Helper\CellHelper;
 
-final readonly class SheetView
+final class SheetView
 {
+    private bool $showFormulas = false;
+    private bool $showGridLines = true;
+    private bool $showRowColHeaders = true;
+    private bool $showZeros = true;
+    private bool $rightToLeft = false;
+    private bool $tabSelected = false;
+    private bool $showOutlineSymbols = true;
+    private bool $defaultGridColor = true;
+    private string $view = 'normal';
+    private string $topLeftCell = 'A1';
+    private int $colorId = 64;
+    private int $zoomScale = 100;
+    private int $zoomScaleNormal = 100;
+    private int $zoomScalePageLayoutView = 100;
+    private int $workbookViewId = 0;
+    private int $freezeRow = 0;
+    private string $freezeColumn = 'A';
+
     /**
-     * @param non-empty-string $view
-     * @param non-empty-string $topLeftCell
-     * @param non-negative-int $colorId
-     * @param non-negative-int $zoomScale
-     * @param non-negative-int $zoomScaleNormal
-     * @param non-negative-int $zoomScalePageLayoutView
-     * @param non-negative-int $workbookViewId
-     * @param non-negative-int $freezeRow
-     * @param non-empty-string $freezeColumn
+     * @return $this
      */
-    public function __construct(
-        public bool $showFormulas = false,
-        public bool $showGridLines = true,
-        public bool $showRowColHeaders = true,
-        public bool $showZeros = true,
-        public bool $rightToLeft = false,
-        public bool $tabSelected = false,
-        public bool $showOutlineSymbols = true,
-        public bool $defaultGridColor = true,
-        public string $view = 'normal',
-        public string $topLeftCell = 'A1',
-        public int $colorId = 64,
-        public int $zoomScale = 100,
-        public int $zoomScaleNormal = 100,
-        public int $zoomScalePageLayoutView = 100,
-        public int $workbookViewId = 0,
-        public int $freezeRow = 0,
-        public string $freezeColumn = 'A',
-    ) {
-        if ($this->freezeRow < 0) {
-            throw new InvalidArgumentException('Freeze row must be a positive integer');
-        }
-        if ($this->freezeColumn !== strtoupper($this->freezeColumn)) {
-            throw new InvalidArgumentException('Freeze column must be provided uppercase');
-        }
+    public function setShowFormulas(bool $showFormulas): self
+    {
+        $this->showFormulas = $showFormulas;
+
+        return $this;
     }
 
-    public function withShowFormulas(bool $showFormulas): self
+    /**
+     * @return $this
+     */
+    public function setShowGridLines(bool $showGridLines): self
     {
-        $values = get_object_vars($this);
-        $values['showFormulas'] = $showFormulas;
+        $this->showGridLines = $showGridLines;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withShowGridLines(bool $showGridLines): self
+    /**
+     * @return $this
+     */
+    public function setShowRowColHeaders(bool $showRowColHeaders): self
     {
-        $values = get_object_vars($this);
-        $values['showGridLines'] = $showGridLines;
+        $this->showRowColHeaders = $showRowColHeaders;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withShowRowColHeaders(bool $showRowColHeaders): self
+    /**
+     * @return $this
+     *
+     * @deprecated Use {@see self::setShowZeros()} instead
+     */
+    public function setShowZeroes(bool $showZeroes): self
     {
-        $values = get_object_vars($this);
-        $values['showRowColHeaders'] = $showRowColHeaders;
+        $this->setShowZeros($showZeroes);
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withShowZeros(bool $showZeros): self
+    /**
+     * @return $this
+     */
+    public function setShowZeros(bool $showZeros): self
     {
-        $values = get_object_vars($this);
-        $values['showZeros'] = $showZeros;
+        $this->showZeros = $showZeros;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withRightToLeft(bool $rightToLeft): self
+    /**
+     * @return $this
+     */
+    public function setRightToLeft(bool $rightToLeft): self
     {
-        $values = get_object_vars($this);
-        $values['rightToLeft'] = $rightToLeft;
+        $this->rightToLeft = $rightToLeft;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withTabSelected(bool $tabSelected): self
+    /**
+     * @return $this
+     */
+    public function setTabSelected(bool $tabSelected): self
     {
-        $values = get_object_vars($this);
-        $values['tabSelected'] = $tabSelected;
+        $this->tabSelected = $tabSelected;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withShowOutlineSymbols(bool $showOutlineSymbols): self
+    /**
+     * @return $this
+     */
+    public function setShowOutlineSymbols(bool $showOutlineSymbols): self
     {
-        $values = get_object_vars($this);
-        $values['showOutlineSymbols'] = $showOutlineSymbols;
+        $this->showOutlineSymbols = $showOutlineSymbols;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withDefaultGridColor(bool $defaultGridColor): self
+    /**
+     * @return $this
+     */
+    public function setDefaultGridColor(bool $defaultGridColor): self
     {
-        $values = get_object_vars($this);
-        $values['defaultGridColor'] = $defaultGridColor;
+        $this->defaultGridColor = $defaultGridColor;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withView(string $view): self
+    /**
+     * @return $this
+     */
+    public function setView(string $view): self
     {
-        $values = get_object_vars($this);
-        $values['view'] = $view;
+        $this->view = $view;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withTopLeftCell(string $topLeftCell): self
+    /**
+     * @return $this
+     */
+    public function setTopLeftCell(string $topLeftCell): self
     {
-        $values = get_object_vars($this);
-        $values['topLeftCell'] = $topLeftCell;
+        $this->topLeftCell = $topLeftCell;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withColorId(int $colorId): self
+    /**
+     * @return $this
+     */
+    public function setColorId(int $colorId): self
     {
-        $values = get_object_vars($this);
-        $values['colorId'] = $colorId;
+        $this->colorId = $colorId;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withZoomScale(int $zoomScale): self
+    /**
+     * @return $this
+     */
+    public function setZoomScale(int $zoomScale): self
     {
-        $values = get_object_vars($this);
-        $values['zoomScale'] = $zoomScale;
+        $this->zoomScale = $zoomScale;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withZoomScaleNormal(int $zoomScaleNormal): self
+    /**
+     * @return $this
+     */
+    public function setZoomScaleNormal(int $zoomScaleNormal): self
     {
-        $values = get_object_vars($this);
-        $values['zoomScaleNormal'] = $zoomScaleNormal;
+        $this->zoomScaleNormal = $zoomScaleNormal;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withZoomScalePageLayoutView(int $zoomScalePageLayoutView): self
+    /**
+     * @return $this
+     */
+    public function setZoomScalePageLayoutView(int $zoomScalePageLayoutView): self
     {
-        $values = get_object_vars($this);
-        $values['zoomScalePageLayoutView'] = $zoomScalePageLayoutView;
+        $this->zoomScalePageLayoutView = $zoomScalePageLayoutView;
 
-        return new self(...$values);
+        return $this;
     }
 
-    public function withWorkbookViewId(int $workbookViewId): self
+    /**
+     * @return $this
+     */
+    public function setWorkbookViewId(int $workbookViewId): self
     {
-        $values = get_object_vars($this);
-        $values['workbookViewId'] = $workbookViewId;
+        $this->workbookViewId = $workbookViewId;
 
-        return new self(...$values);
+        return $this;
     }
 
     /**
      * @param positive-int $freezeRow Set to 2 to fix the first row
+     *
+     * @return $this
      */
-    public function withFreezeRow(int $freezeRow): self
+    public function setFreezeRow(int $freezeRow): self
     {
-        $values = get_object_vars($this);
-        $values['freezeRow'] = $freezeRow;
+        if ($freezeRow < 1) {
+            throw new InvalidArgumentException('Freeze row must be a positive integer');
+        }
 
-        return new self(...$values);
+        $this->freezeRow = $freezeRow;
+
+        return $this;
     }
 
     /**
      * @param string $freezeColumn Set to B to fix the first column
+     *
+     * @return $this
      */
-    public function withFreezeColumn(string $freezeColumn): self
+    public function setFreezeColumn(string $freezeColumn): self
     {
-        $values = get_object_vars($this);
-        $values['freezeColumn'] = $freezeColumn;
+        $this->freezeColumn = strtoupper($freezeColumn);
 
-        return new self(...$values);
+        return $this;
     }
 
     public function getXml(): string
