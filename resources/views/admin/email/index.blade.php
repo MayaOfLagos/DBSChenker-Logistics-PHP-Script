@@ -50,7 +50,7 @@
 @endsection
 
 @push('scripts')
-<script src="//cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+<script src="https://cdn.ckeditor.com/4.25.1/standard/ckeditor.js"></script>
 <script>
 $(document).ready(function() {
     if (typeof CKEDITOR !== 'undefined') {
