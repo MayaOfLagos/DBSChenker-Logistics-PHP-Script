@@ -16,12 +16,12 @@
 <input type="hidden" name="id" value="{{ $shipment->id }}">
 
 @php
-    $shipmentPhoto = $shipment->photo ?? null;
-    $shipmentPhotoUrl = $shipmentPhoto
-        ? (\Illuminate\Support\Str::startsWith($shipmentPhoto, 'shipment_photos/')
-            ? asset($shipmentPhoto)
-            : asset('storage/' . ltrim($shipmentPhoto, '/')))
-        : null;
+    $shipmentPhotoUrl = null;
+    if ($shipment->photo) {
+        $shipmentPhotoUrl = \Illuminate\Support\Str::startsWith($shipment->photo, 'shipment_photos/')
+            ? asset($shipment->photo)
+            : asset('storage/' . ltrim($shipment->photo, '/'));
+    }
 @endphp
 
 {{-- Tracking / Status --}}
@@ -39,19 +39,26 @@
                 alt="{{ $shipment->trackingnumber }}" class="img-fluid" style="max-height:80px;">
         </div>
         <div class="row g-3 justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label class="form-label">Tracking Number</label>
                 <input type="text" class="form-control" id="trackingnumber" name="trackingnumber"
                     value="{{ old('trackingnumber', $shipment->trackingnumber) }}" required>
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Status</label>
+            <div class="col-md-4">
+                <label class="form-label">Shipment Status</label>
                 <select class="form-control" name="status">
-                    @foreach(['Order Confirmed','Picked by Courier','On The Way','Custom Hold','Delivered'] as $s)
-                        <option value="{{ $s }}" {{ $shipment->status == $s ? 'selected' : '' }}>{{ $s }}</option>
+                    @foreach(['Order Confirmed','Picked by Courier','On The Way','Custom Hold','Delivered','Approved','Available','Pending'] as $s)
+                        <option value="{{ $s }}" {{ old('status', $shipment->status) == $s ? 'selected' : '' }}>{{ $s }}</option>
                     @endforeach
                 </select>
-                <small class="text-muted">Use Update Status page to send notifications.</small>
+                <small class="text-muted">Use Update Status to send email notifications.</small>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Payment Status</label>
+                <select class="form-control" name="cstatus">
+                    <option value="Paid"   {{ old('cstatus', $shipment->cstatus) == 'Paid'   ? 'selected' : '' }}>Paid</option>
+                    <option value="Unpaid" {{ old('cstatus', $shipment->cstatus) == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
+                </select>
             </div>
         </div>
     </div>
@@ -68,11 +75,16 @@
                     <input type="text" class="form-control" name="sname" value="{{ old('sname', $shipment->sname) }}" required>
                 </div>
                 <div class="mb-3">
+                    <label class="form-label">Sender Email</label>
+                    <input type="email" class="form-control" name="semail" value="{{ old('semail', $shipment->semail) }}">
+                    <small class="text-muted">Optional: for notifications to sender</small>
+                </div>
+                <div class="mb-3">
                     <label class="form-label">Sender Address <span class="text-danger">*</span></label>
                     <textarea class="form-control" name="saddress" rows="3" required>{{ old('saddress', $shipment->saddress) }}</textarea>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Origin Office <span class="text-danger">*</span></label>
+                    <label class="form-label">Origin Location <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" name="take_off_point" value="{{ old('take_off_point', $shipment->take_off_point) }}" required>
                 </div>
             </div>
@@ -101,7 +113,7 @@
                     <textarea class="form-control" name="address" rows="3" required>{{ old('address', $shipment->address) }}</textarea>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Destination Office <span class="text-danger">*</span></label>
+                    <label class="form-label">Destination Location <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" name="final_destination" value="{{ old('final_destination', $shipment->final_destination) }}" required>
                 </div>
             </div>
@@ -115,13 +127,31 @@
         <div class="card h-100">
             <div class="card-header bg-primary text-white"><h5 class="card-title mb-0">Shipment Details</h5></div>
             <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label">Quantity <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control" name="qty" min="1" value="{{ old('qty', $shipment->qty) }}" required>
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Quantity <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" name="qty" min="1" value="{{ old('qty', $shipment->qty) }}" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Weight (kg)</label>
+                        <input type="number" step="0.01" class="form-control" name="weight" value="{{ old('weight', $shipment->weight) }}">
+                    </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Description <span class="text-danger">*</span></label>
-                    <textarea class="form-control" name="description" rows="4" required>{{ old('description', $shipment->description) }}</textarea>
+                    <label class="form-label">Dimensions (L×W×H)</label>
+                    <input type="text" class="form-control" name="dimensions" placeholder="e.g. 30x20x15 cm" value="{{ old('dimensions', $shipment->dimensions) }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Shipping Method <span class="text-danger">*</span></label>
+                    <select class="form-control" name="freight_type" required>
+                        @foreach(['Road' => 'Road Transport','Air' => 'Air Freight','Sea' => 'Sea Freight','Rail' => 'Rail Transport','Multimodal' => 'Multimodal Transport'] as $val => $label)
+                            <option value="{{ $val }}" {{ old('freight_type', $shipment->freight_type) == $val ? 'selected' : '' }}>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Package Description <span class="text-danger">*</span></label>
+                    <textarea class="form-control" name="description" rows="3" required>{{ old('description', $shipment->description) }}</textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Shipment Photo</label>
@@ -136,22 +166,39 @@
         </div>
     </div>
 
-    {{-- Cost --}}
+    {{-- Cost & Dates --}}
     <div class="col-md-6">
         <div class="card h-100">
-            <div class="card-header bg-primary text-white"><h5 class="card-title mb-0">Cost Information</h5></div>
+            <div class="card-header bg-primary text-white"><h5 class="card-title mb-0">Cost &amp; Dates</h5></div>
             <div class="card-body">
                 <div class="mb-3">
                     <label class="form-label">Shipping Cost ({{ $settings->s_currency }}) <span class="text-danger">*</span></label>
-                    <input type="number" step="0.01" class="form-control" id="cost" name="cost" value="{{ old('cost', $shipment->cost) }}" required>
+                    <input type="number" step="0.01" class="form-control" id="cost" name="cost"
+                        value="{{ old('cost', $shipment->cost) }}" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Clearance Cost ({{ $settings->s_currency }}) <span class="text-danger">*</span></label>
-                    <input type="number" step="0.01" class="form-control" id="clearance_cost" name="clearance_cost" value="{{ old('clearance_cost', $shipment->clearance_cost) }}" required>
+                    <input type="number" step="0.01" class="form-control" id="clearance_cost" name="clearance_cost"
+                        value="{{ old('clearance_cost', $shipment->clearance_cost) }}" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Total Cost ({{ $settings->s_currency }})</label>
                     <input type="text" class="form-control" id="total_cost" readonly>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Delivery Progress (%)</label>
+                    <input type="number" class="form-control" name="percentage_complete"
+                        value="{{ old('percentage_complete', $shipment->percentage_complete) }}" min="0" max="100">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Date Shipped <span class="text-danger">*</span></label>
+                    <input type="datetime-local" class="form-control" name="date_shipped"
+                        value="{{ old('date_shipped', $shipment->date_shipped ? date('Y-m-d\TH:i', strtotime($shipment->date_shipped)) : '') }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Expected Delivery <span class="text-danger">*</span></label>
+                    <input type="datetime-local" class="form-control" name="expected_delivery"
+                        value="{{ old('expected_delivery', $shipment->expected_delivery ? date('Y-m-d\TH:i', strtotime($shipment->expected_delivery)) : '') }}" required>
                 </div>
             </div>
         </div>

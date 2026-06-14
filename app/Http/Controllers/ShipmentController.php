@@ -333,23 +333,30 @@ class ShipmentController extends Controller
                 'required',
                 'string',
                 'max:255',
-                // Ensure tracking number is unique except for this shipment
                 Rule::unique('users', 'trackingnumber')->ignore($request->id)
             ],
-            'sname' => 'required|string|max:255',                     // Sender Name
-            'saddress' => 'required|string|max:255',                  // Sender Address
-            'take_off_point' => 'required|string|max:255',            // Origin Office
-            'name' => 'required|string|max:255',                      // Receiver Name
-            'email' => 'required|email|max:255',                      // Receiver Email
-            'phone' => 'required|string|max:20',                      // Receiver Phone
-            'address' => 'required|string|max:255',                   // Receiver Address
-            'final_destination' => 'required|string|max:255',         // Destination Office
-            'qty' => 'required|numeric|min:1',                        // Quantity
-            'description' => 'required|string',                       // Parcel Description
-            'cost' => 'required|numeric|min:0',                       // Shipping Cost
-            'clearance_cost' => 'required|numeric|min:0',             // Clearance Cost
-            'status' => 'required|string|in:Order Confirmed,Picked by Courier,On The Way,Custom Hold,Delivered',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Shipment Photo
+            'sname'             => 'required|string|max:255',
+            'semail'            => 'nullable|email|max:255',
+            'saddress'          => 'required|string|max:255',
+            'take_off_point'    => 'required|string|max:255',
+            'name'              => 'required|string|max:255',
+            'email'             => 'required|email|max:255',
+            'phone'             => 'required|string|max:20',
+            'address'           => 'required|string|max:255',
+            'final_destination' => 'required|string|max:255',
+            'qty'               => 'required|numeric|min:1',
+            'description'       => 'required|string',
+            'weight'            => 'nullable|numeric|min:0',
+            'dimensions'        => 'nullable|string|max:100',
+            'freight_type'      => 'required|string',
+            'cost'              => 'required|numeric|min:0',
+            'clearance_cost'    => 'required|numeric|min:0',
+            'cstatus'           => 'required|string|in:Paid,Unpaid',
+            'date_shipped'      => 'required',
+            'expected_delivery' => 'required',
+            'percentage_complete' => 'nullable|numeric|min:0|max:100',
+            'status'            => 'required|string|in:Order Confirmed,Picked by Courier,On The Way,Custom Hold,Delivered,Approved,Available,Pending',
+            'photo'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -381,20 +388,28 @@ class ShipmentController extends Controller
         }
 
         // Update shipment data
-        $shipment->trackingnumber = $request->trackingnumber; // Update tracking number
-        $shipment->sname = $request->sname;
-        $shipment->saddress = $request->saddress;
-        $shipment->take_off_point = $request->take_off_point;
-        $shipment->name = $request->name;
-        $shipment->email = $request->email;
-        $shipment->phone = $request->phone;
-        $shipment->address = $request->address;
-        $shipment->final_destination = $request->final_destination;
-        $shipment->qty = $request->qty;
-        $shipment->description = $request->description;
-        $shipment->cost = $request->cost;
-        $shipment->clearance_cost = $request->clearance_cost;
-        $shipment->status = $request->status;
+        $shipment->trackingnumber     = $request->trackingnumber;
+        $shipment->sname              = $request->sname;
+        $shipment->semail             = $request->semail;
+        $shipment->saddress           = $request->saddress;
+        $shipment->take_off_point     = $request->take_off_point;
+        $shipment->name               = $request->name;
+        $shipment->email              = $request->email;
+        $shipment->phone              = $request->phone;
+        $shipment->address            = $request->address;
+        $shipment->final_destination  = $request->final_destination;
+        $shipment->qty                = $request->qty;
+        $shipment->description        = $request->description;
+        $shipment->weight             = $request->weight;
+        $shipment->dimensions         = $request->dimensions;
+        $shipment->freight_type       = $request->freight_type;
+        $shipment->cost               = $request->cost;
+        $shipment->clearance_cost     = $request->clearance_cost;
+        $shipment->cstatus            = $request->cstatus;
+        $shipment->date_shipped       = $request->date_shipped;
+        $shipment->expected_delivery  = $request->expected_delivery;
+        $shipment->percentage_complete = $request->percentage_complete;
+        $shipment->status             = $request->status;
 
         // Handle photo upload if provided
         if ($request->hasFile('photo')) {
