@@ -35,10 +35,10 @@ onMounted(async () => {
       document.title = data.site_name
     }
 
-    // Tido live chat
+    // Tidio live chat
     if (data.tido) {
       const s = document.createElement('script')
-      s.src = `https://embed.tidiochat.com/${data.tido}.js`
+      s.src = `//code.tidio.co/${data.tido}.js`
       s.async = true
       document.body.appendChild(s)
     }

@@ -125,6 +125,7 @@ class AppSettingsController extends Controller
                 'year' => $request->year,
                 'locations' => $request->locations,
                 'usertheme' => $request->usertheme,
+                'contact_email' => $request->contact_email,
             ]);
 
         $moreset = SettingsCont::find(1);
