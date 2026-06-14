@@ -50,38 +50,64 @@
 @endsection
 
 @push('style')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs5.min.css">
+<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
+<style>
+  .ck-editor__editable { min-height: 300px; }
+  [data-bs-theme="dark"] .ck.ck-editor__main>.ck-editor__editable,
+  [data-bs-theme="dark"] .ck.ck-toolbar,
+  [data-bs-theme="dark"] .ck.ck-toolbar__separator { background: #1e293b !important; color: #e2e8f0 !important; border-color: #334155 !important; }
+  [data-bs-theme="dark"] .ck.ck-button { color: #e2e8f0 !important; }
+  [data-bs-theme="dark"] .ck.ck-button:hover, [data-bs-theme="dark"] .ck.ck-button.ck-on { background: #334155 !important; }
+</style>
 @endpush
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs5.min.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>
 <script>
-$(document).ready(function() {
-    $('#message-editor').summernote({
-        height: 300,
-        toolbar: [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['link']],
-            ['view', ['fullscreen', 'codeview']],
-        ],
-        placeholder: 'Write your message here...',
-    });
+(function () {
+    const {
+        ClassicEditor, Essentials, Autoformat, Bold, Italic, Underline, Strikethrough,
+        Paragraph, Heading, Link, List, BlockQuote, Indent, FontSize, FontColor,
+        PasteFromOffice, TextTransformation
+    } = CKEDITOR;
 
-    var category = document.getElementById('category');
+    ClassicEditor
+        .create(document.querySelector('#message-editor'), {
+            plugins: [
+                Essentials, Autoformat, Bold, Italic, Underline, Strikethrough,
+                Paragraph, Heading, Link, List, BlockQuote, Indent,
+                FontSize, FontColor, PasteFromOffice, TextTransformation
+            ],
+            toolbar: {
+                items: [
+                    'heading', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'fontSize', 'fontColor', '|',
+                    'link', 'bulletedList', 'numberedList', '|',
+                    'outdent', 'indent', 'blockQuote', '|',
+                    'undo', 'redo'
+                ]
+            },
+            placeholder: 'Write your message here...'
+        })
+        .then(editor => {
+            window._ckEditor = editor;
+            document.querySelector('form').addEventListener('submit', () => {
+                editor.updateSourceElement();
+            });
+        })
+        .catch(error => console.error(error));
 
-    category.addEventListener('change', function() {
+    document.getElementById('category').addEventListener('change', function () {
+        var wrap = document.getElementById('select-user-view');
         if (this.value === 'Select Users') {
-            document.getElementById('select-user-view').classList.remove('d-none');
+            wrap.classList.remove('d-none');
             var users = document.getElementById('showusers');
             users.innerHTML = '';
             fetch("{{ route('fetchusers') }}")
                 .then(r => r.json())
                 .then(data => {
-                    data.data.forEach(function(el) {
+                    data.data.forEach(function (el) {
                         var opt = document.createElement('option');
                         opt.value = el.id;
                         opt.textContent = el.name;
@@ -89,10 +115,10 @@ $(document).ready(function() {
                     });
                 });
         } else {
-            document.getElementById('select-user-view').classList.add('d-none');
+            wrap.classList.add('d-none');
         }
     });
-});
+})();
 
 function SelectPage(elem) {
     var count = Array.from(elem.options).filter(o => o.selected).length;
