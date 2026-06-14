@@ -38,7 +38,7 @@
 
             <div class="mb-3">
                 <label class="form-label">Message <span class="text-danger">*</span></label>
-                <textarea class="form-control ckeditor" name="message" rows="8" required></textarea>
+                <textarea id="message-editor" name="message" rows="8" required></textarea>
             </div>
 
             <button type="submit" class="btn btn-primary">
@@ -49,13 +49,27 @@
 </div>
 @endsection
 
+@push('style')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs5.min.css">
+@endpush
+
 @push('scripts')
-<script src="https://cdn.ckeditor.com/4.25.1/standard/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs5.min.js"></script>
 <script>
 $(document).ready(function() {
-    if (typeof CKEDITOR !== 'undefined') {
-        $('.ckeditor').each(function() { CKEDITOR.replace(this); });
-    }
+    $('#message-editor').summernote({
+        height: 300,
+        toolbar: [
+            ['style', ['bold', 'italic', 'underline', 'clear']],
+            ['font', ['strikethrough']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['link']],
+            ['view', ['fullscreen', 'codeview']],
+        ],
+        placeholder: 'Write your message here...',
+    });
 
     var category = document.getElementById('category');
 
