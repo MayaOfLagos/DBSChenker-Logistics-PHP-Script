@@ -35,11 +35,19 @@ onMounted(async () => {
       document.title = data.site_name
     }
 
-    // Tidio live chat
-    if (data.tido) {
+    // Smartsupp live chat
+    const smartsuppKey = data.smartsupp_key || data.tido
+    if (smartsuppKey && !window.smartsupp) {
+      window._smartsupp = window._smartsupp || {}
+      window._smartsupp.key = smartsuppKey
+      window.smartsupp = function () { window.smartsupp._.push(arguments) }
+      window.smartsupp._ = []
+
       const s = document.createElement('script')
-      s.src = `//code.tidio.co/${data.tido}.js`
+      s.type = 'text/javascript'
+      s.charset = 'utf-8'
       s.async = true
+      s.src = 'https://www.smartsuppchat.com/loader.js?'
       document.body.appendChild(s)
     }
 

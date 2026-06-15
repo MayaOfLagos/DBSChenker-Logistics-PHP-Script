@@ -61,8 +61,9 @@
                             <input type="text" class="form-control" name="phone" value="{{ $settings->phone }}" placeholder="+15551234567">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Tido Livechat ID <small class="text-danger">(leave empty to disable)</small></label>
-                            <input type="text" class="form-control" name="tido" value="{{ $settings->tido }}">
+                            <label class="form-label">Smartsupp Live Chat Key <small class="text-danger">(leave empty to disable)</small></label>
+                            <input type="text" class="form-control" name="tido" value="{{ old('tido', $settings->tido) }}" placeholder="0e89323056bcf508d6c3f5a5ce195409d8681e72">
+                            <small class="form-text text-muted">Paste only the Smartsupp key, not the full script tag.</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Year Started</label>

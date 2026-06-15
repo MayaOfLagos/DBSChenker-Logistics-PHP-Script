@@ -278,6 +278,7 @@ class FrontendController extends Controller
             'whatsapp'          => $settings?->whatsapp,
             'phone'             => $settings?->phone,
             'locations'         => $settings?->locations,
+            'smartsupp_key'     => $settings?->tido,
             'tido'              => $settings?->tido,
             'year_started'      => $settings?->twak,
             'google_translate'  => $settings?->google_translate ?? 'off',

@@ -29,6 +29,7 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
     <div id="app"></div>
+    <noscript>Powered by <a href="https://www.smartsupp.com" target="_blank">Smartsupp</a></noscript>
 
     {{-- Logisko vendor scripts (jQuery-based globals; must load before Vue mounts) --}}
     <script src="{{ asset('assets/js/vendor/jquary-3.6.0.min.js') }}?v={{ $av }}"></script>
