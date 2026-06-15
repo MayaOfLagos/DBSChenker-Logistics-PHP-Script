@@ -227,6 +227,7 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
         Route::put('dashboard/updatewebinfo', 'updatewebinfo')->name('updatewebinfo');
         Route::put('dashboard/updatepreference', 'updatepreference')->name('updatepreference');
         Route::put('dashboard/updateemail', 'updateemail')->name('updateemailpreference');
+        Route::put('dashboard/update-shipment-enums', 'updateShipmentEnums')->name('updateShipmentEnums');
         // Settings Routes
         Route::get('dashboard/settings/app-settings', 'appsettingshow')->name('appsettingshow');
         Route::post('update-theme', 'updateTheme')->name('theme.update');

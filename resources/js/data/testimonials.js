@@ -1,0 +1,125 @@
+// Shared testimonial data — used by HomePage carousel and TestimonialsPage grid.
+// Portrait images: randomuser.me (free, open-source, gender-specific by path).
+// men/N  → reliably male photos
+// women/N → reliably female photos
+
+export const testimonials = [
+  {
+    id: 1,
+    gender: 'male',
+    name: 'James Okafor',
+    role: 'Supply Chain Director',
+    img: 'https://randomuser.me/api/portraits/men/10.jpg',
+    stars: 5,
+    text: "We've relied on DB Schenker for our cross-continental shipments for three years and the consistency is remarkable. From Lagos to London, every consignment arrives on time with zero damage. Their real-time visibility platform is genuinely world-class.",
+  },
+  {
+    id: 2,
+    gender: 'female',
+    name: 'Sarah Blackwood',
+    role: 'Global Trade Manager',
+    img: 'https://randomuser.me/api/portraits/women/12.jpg',
+    stars: 5,
+    text: "As Head of Global Trade I've worked with every major freight forwarder. DB Schenker stands apart in one critical way — when something goes wrong they tell you immediately and have a solution ready. That transparency is invaluable.",
+  },
+  {
+    id: 3,
+    gender: 'male',
+    name: 'Daniel Müller',
+    role: 'Freight Operations Manager',
+    img: 'https://randomuser.me/api/portraits/men/22.jpg',
+    stars: 5,
+    text: "We ship automotive components across 12 EU countries and DB Schenker handles every route flawlessly. Their EDI integration with our ERP saved us countless hours and the reporting is precise enough to satisfy even our most demanding auditors.",
+  },
+  {
+    id: 4,
+    gender: 'female',
+    name: 'Yuki Tanaka',
+    role: 'Supply Chain Analyst',
+    img: 'https://randomuser.me/api/portraits/women/24.jpg',
+    stars: 5,
+    text: "Our Tokyo-to-Tel Aviv e-commerce flow was chaotic before DB Schenker. Now we have weekly consolidated air freight, consistent lead times, and a dedicated account manager who actually picks up the phone. Our customers notice the difference.",
+  },
+  {
+    id: 5,
+    gender: 'male',
+    name: 'Carlos Mendez',
+    role: 'Import & Export Coordinator',
+    img: 'https://randomuser.me/api/portraits/men/33.jpg',
+    stars: 5,
+    text: "Clearing customs used to be our biggest headache. Since partnering with DB Schenker, our cross-border shipments clear in hours, not days. Their compliance team knows every regulation and keeps us out of trouble every single time.",
+  },
+  {
+    id: 6,
+    gender: 'female',
+    name: 'Amira Hassan',
+    role: 'Customs Compliance Officer',
+    img: 'https://randomuser.me/api/portraits/women/35.jpg',
+    stars: 5,
+    text: "I chose DB Schenker specifically for their customs expertise. Their brokerage team handles HS classification, duty optimisation, and port coordination end to end. We haven't had a single customs hold since we made the switch.",
+  },
+  {
+    id: 7,
+    gender: 'male',
+    name: 'Arjun Sharma',
+    role: 'Logistics Consultant',
+    img: 'https://randomuser.me/api/portraits/men/44.jpg',
+    stars: 5,
+    text: "Switched from two other 3PL providers to DB Schenker and the difference was immediate. Our air freight is consistent, well-documented, and the tracking is granular enough that I can answer any client query within seconds.",
+  },
+  {
+    id: 8,
+    gender: 'female',
+    name: 'Lisa Kowalski',
+    role: 'Distribution Center Manager',
+    img: 'https://randomuser.me/api/portraits/women/48.jpg',
+    stars: 5,
+    text: "DB Schenker's cross-dock services and road network across Central Europe have reduced our order cycle time by 40%. The operational reporting they provide is detailed, actionable, and presented in a way our whole team can understand.",
+  },
+  {
+    id: 9,
+    gender: 'male',
+    name: 'Thomas Laurent',
+    role: 'Head of Procurement',
+    img: 'https://randomuser.me/api/portraits/men/66.jpg',
+    stars: 5,
+    text: "For temperature-sensitive pharmaceutical shipments we cannot afford mistakes. DB Schenker's cold-chain service maintains precise conditions from factory to pharmacy and every shipment arrives with full audit logs — exactly what our regulators require.",
+  },
+  {
+    id: 10,
+    gender: 'female',
+    name: 'Rebecca Torres',
+    role: 'E-commerce Operations Lead',
+    img: 'https://randomuser.me/api/portraits/women/60.jpg',
+    stars: 5,
+    text: "Our peak-season shipment volumes are extreme. DB Schenker scaled capacity on short notice, maintained our SLAs throughout, and gave us visibility that let us proactively communicate delays to customers. Calm professionals under real pressure.",
+  },
+  {
+    id: 11,
+    gender: 'male',
+    name: 'Michael Adeyemi',
+    role: 'Warehouse Operations Lead',
+    img: 'https://randomuser.me/api/portraits/men/55.jpg',
+    stars: 5,
+    text: "Their warehousing solution transformed our last-mile distribution. The team onboarded us in under a week, the WMS integration was seamless, and our inventory accuracy improved to 99.7% — a number we couldn't even dream of before.",
+  },
+  {
+    id: 12,
+    gender: 'female',
+    name: 'Fatima Al-Rashid',
+    role: 'Regional Logistics Head',
+    img: 'https://randomuser.me/api/portraits/women/72.jpg',
+    stars: 5,
+    text: "DB Schenker's presence across the GCC means our regional distribution is completely seamless. Whether it's Riyadh, Dubai, or Kuwait City — documentation is always perfect and deliveries are consistently on time. A truly reliable partner.",
+  },
+]
+
+// Subset used in the homepage carousel (6 spread across genders)
+export const homeTestimonials = [
+  testimonials[0],  // James Okafor – male
+  testimonials[1],  // Sarah Blackwood – female
+  testimonials[2],  // Daniel Müller – male
+  testimonials[3],  // Yuki Tanaka – female
+  testimonials[6],  // Arjun Sharma – male
+  testimonials[9],  // Rebecca Torres – female
+]

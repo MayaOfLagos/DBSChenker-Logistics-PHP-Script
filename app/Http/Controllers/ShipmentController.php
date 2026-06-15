@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\CreateShipmentNotification;
+use App\Mail\ShipmentSenderNotification;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Settings;
@@ -96,10 +97,14 @@ class ShipmentController extends Controller
         // Create the initial tracking record
         $this->createTrackingRecord($shipment->id, $request->take_off_point, "Order Confirmed", "Your shipment has been confirmed and is being processed.");
 
-        // Send email notification to the receiver
-        $this->sendReceiverNotification($shipment);
+        // Send notifications only if admin explicitly checked the boxes
+        if ($request->boolean('notify_receiver')) {
+            $this->sendReceiverNotification($shipment);
+        }
+        if ($request->boolean('notify_sender') && !empty($shipment->semail)) {
+            $this->sendSenderNotification($shipment);
+        }
 
-        // Redirect with success message and shipment details
         return redirect()->route('admin.shipments.view', $shipment->id)
             ->with('success', 'Shipment created successfully. Tracking Number: ' . $trackingNumber);
     }
@@ -111,46 +116,61 @@ class ShipmentController extends Controller
      */
     private function generateTrackingNumber()
     {
-        // Get settings
         $settings = Settings::where('id', '1')->first();
 
-        // Extract first two letters of site name and convert to uppercase
-        $sitePrefix = strtoupper(substr($settings->site_name, 0, 2));
+        // Use admin-defined prefix, or fall back to first 2 letters of site name
+        $prefix = !empty($settings->tracking_prefix)
+            ? strtoupper(trim($settings->tracking_prefix))
+            : strtoupper(substr($settings->site_name ?? 'SH', 0, 2));
 
-        // Format: SITEINITIALS-RANDOMNUMBER-RANDOMSTRING
-        $prefix = $sitePrefix;
-        $year = rand(1000, 9999); // Generate a random 4-digit number instead of year
-        $randomString = strtoupper(Str::random(8));
+        $stamp = now()->format('mdHis');
+        $extra = rand(10, 99);
+        $trackingNumber = "{$prefix}{$stamp}{$extra}";
 
-        $trackingNumber = "{$prefix}-{$year}-{$randomString}";
-
-        // Check if tracking number already exists
         while (User::where('trackingnumber', $trackingNumber)->exists()) {
-            $randomString = strtoupper(Str::random(8));
-            $trackingNumber = "{$prefix}-{$year}-{$randomString}";
+            $extra = rand(10, 99);
+            $trackingNumber = "{$prefix}{$stamp}{$extra}";
         }
 
         return $trackingNumber;
     }
 
+    private function getShipmentStatuses(): array
+    {
+        $settings = Settings::find(1);
+        return $settings?->getShipmentStatusesWithDefault() ?? [
+            'Order Confirmed',
+            'Picked by Courier',
+            'On The Way',
+            'Custom Hold',
+            'Delivered',
+        ];
+    }
+
+    private function getFreightTypes(): array
+    {
+        $settings = Settings::find(1);
+        return $settings?->getFreightTypesWithDefault() ?? [
+            'Road Transport',
+            'Air Freight',
+            'Sea Freight',
+            'Rail Transport',
+            'Multimodal Transport',
+        ];
+    }
+
     /**
      * Create a tracking record for the shipment
-     * 
-     * @param int $userId
-     * @param string $location
-     * @param string $status
-     * @param string $comment
-     * @return void
      */
     private function createTrackingRecord($userId, $location, $status, $comment)
     {
         Tp_Transaction::create([
-            'user' => $userId,
+            'user'    => $userId,
             'address' => $location,
-            'city' => '',  // Can be populated if needed
-            'country' => '',  // Can be populated if needed
-            'status' => $status,
-            'comment' => $comment
+            'city'    => $location,
+            'country' => '',
+            'status'  => $status,
+            'comment' => $comment,
         ]);
     }
 
@@ -163,10 +183,13 @@ class ShipmentController extends Controller
     private function sendReceiverNotification($shipment)
     {
         $settings = Settings::where('id', '1')->first();
-
-        Mail::to($shipment->email)->send(
-            new CreateShipmentNotification($shipment, $settings)
-        );
+        try {
+            Mail::to($shipment->email)->send(
+                new CreateShipmentNotification($shipment, $settings)
+            );
+        } catch (\Throwable $e) {
+            report($e);
+        }
 
         // Generate email content (raw HTML)
         // $emailContent = $this->generateEmailContent($shipment, $settings);
@@ -181,6 +204,18 @@ class ShipmentController extends Controller
         //     null,    // $attachment (optional)
         //     null     // $salutaion (optional)
         // ));
+    }
+
+    private function sendSenderNotification($shipment)
+    {
+        $settings = Settings::where('id', '1')->first();
+        try {
+            Mail::to($shipment->semail)->send(
+                new ShipmentSenderNotification($shipment, $settings)
+            );
+        } catch (\Throwable $e) {
+            report($e);
+        }
     }
 
     private function generateEmailContent($shipment, $settings)
@@ -238,12 +273,13 @@ class ShipmentController extends Controller
      */
     public function updateShipmentStatus(Request $request)
     {
-        // Validate the incoming request
+        $shipmentStatuses = $this->getShipmentStatuses();
+
         $validator = Validator::make($request->all(), [
             'shipment_id' => 'required|exists:users,id',
-            'status' => 'required|string|in:Order Confirmed,Picked by Courier,On The Way,Custom Hold,Delivered',
-            'comment' => 'required|string',
-            'location' => 'required|string',
+            'status'      => ['required', 'string', Rule::in($shipmentStatuses)],
+            'comment'     => 'required|string',
+            'location'    => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -273,11 +309,11 @@ class ShipmentController extends Controller
             ]);
 
 
-        // If status is "Delivered", send a delivery confirmation email
-        if ($request->status === 'Delivered') {
+        // If status is the final/delivered status, send delivery confirmation
+        $finalStatus = $shipmentStatuses[count($shipmentStatuses) - 1];
+        if ($request->status === $finalStatus) {
             $this->sendDeliveryConfirmation($shipment);
         } else {
-            // Send status update notification
             $this->sendStatusUpdateNotification($shipment, $request->status, $request->comment);
         }
 
@@ -355,7 +391,7 @@ class ShipmentController extends Controller
             'date_shipped'      => 'required',
             'expected_delivery' => 'required',
             'percentage_complete' => 'nullable|numeric|min:0|max:100',
-            'status'            => 'required|string|in:Order Confirmed,Picked by Courier,On The Way,Custom Hold,Delivered,Approved,Available,Pending',
+            'status'            => ['required', 'string', Rule::in($this->getShipmentStatuses())],
             'photo'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -465,10 +501,11 @@ class ShipmentController extends Controller
         $settings = Settings::where('id', '1')->first();
 
         return view('admin.update-shipment-status', [
-            'shipment' => $shipment,
-            'tracks' => $tracks,
-            'settings' => $settings,
-            'title' => 'Update Shipment Status'
+            'shipment'         => $shipment,
+            'tracks'           => $tracks,
+            'settings'         => $settings,
+            'title'            => 'Update Shipment Status',
+            'shipmentStatuses' => $this->getShipmentStatuses(),
         ]);
     }
 

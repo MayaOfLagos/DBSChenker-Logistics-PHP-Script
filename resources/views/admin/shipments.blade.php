@@ -34,7 +34,7 @@
             <table class="table table-bordered table-striped table-hover mb-0" id="ShipTable">
                 <thead class="table-dark">
                     <tr>
-                        <th>Tracking #</th>
+                        <th>Tracking No.</th>
                         <th>Sender</th>
                         <th>Receiver</th>
                         <th>Origin &rarr; Destination</th>

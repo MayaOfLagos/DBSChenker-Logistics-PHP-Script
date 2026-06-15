@@ -52,12 +52,10 @@ onMounted(async () => {
         native_language_names: true,
         detect_browser_language: true,
         wrapper_selector: '.gtranslate_wrapper',
-        horizontal_position: 'left',
-        vertical_position: 'bottom',
       }
 
       const s = document.createElement('script')
-      s.src = 'https://cdn.gtranslate.net/widgets/latest/ps.js'
+      s.src = 'https://cdn.gtranslate.net/widgets/latest/float.js'
       s.defer = true
       document.body.appendChild(s)
     }

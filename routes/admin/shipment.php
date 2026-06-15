@@ -13,8 +13,10 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
         Route::get('shipments/create', function () {
             $settings = \App\Models\Settings::where('id', '1')->first();
             return view('admin.create-shipment', [
-                'settings' => $settings,
-                'title' => 'Create New Shipment'
+                'settings'         => $settings,
+                'title'            => 'Create New Shipment',
+                'shipmentStatuses' => $settings?->getShipmentStatusesWithDefault() ?? [],
+                'freightTypes'     => $settings?->getFreightTypesWithDefault() ?? [],
             ]);
         })->name('admin.shipments.create');
 
@@ -26,9 +28,11 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function () {
             $shipment = \App\Models\User::findOrFail($id);
             $settings = \App\Models\Settings::where('id', '1')->first();
             return view('admin.edit-shipment', [
-                'shipment' => $shipment,
-                'settings' => $settings,
-                'title' => 'Edit Shipment'
+                'shipment'         => $shipment,
+                'settings'         => $settings,
+                'title'            => 'Edit Shipment',
+                'shipmentStatuses' => $settings?->getShipmentStatusesWithDefault() ?? [],
+                'freightTypes'     => $settings?->getFreightTypesWithDefault() ?? [],
             ]);
         })->name('admin.shipments.edit');
 

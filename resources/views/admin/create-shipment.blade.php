@@ -96,15 +96,15 @@
             <div class="col-md-6">
                 <label class="form-label">Shipping Method <span class="text-danger">*</span></label>
                 <select class="form-control" name="freight_type" required>
-                    @foreach(['Road' => 'Road Transport','Air' => 'Air Freight','Sea' => 'Sea Freight','Rail' => 'Rail Transport','Multimodal' => 'Multimodal Transport'] as $val => $label)
-                        <option value="{{ $val }}" {{ old('freight_type') == $val ? 'selected' : '' }}>{{ $label }}</option>
+                    @foreach($freightTypes as $ft)
+                        <option value="{{ $ft }}" {{ old('freight_type') == $ft ? 'selected' : '' }}>{{ $ft }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Shipment Status <span class="text-danger">*</span></label>
                 <select class="form-control" name="status" required>
-                    @foreach(['Order Confirmed','Picked by Courier','On The Way','Custom Hold','Delivered','Approved','Available','Pending'] as $s)
+                    @foreach($shipmentStatuses as $s)
                         <option value="{{ $s }}" {{ old('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
                     @endforeach
                 </select>
@@ -156,6 +156,35 @@
             <div class="col-md-12">
                 <label class="form-label">Delivery Percentage Completed</label>
                 <input type="number" class="form-control" name="percentage_complete" value="{{ old('percentage_complete', 0) }}" min="0" max="100">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <h5 class="card-title mb-0"><i class="bi bi-bell me-2"></i>Email Notifications <small class="text-muted fw-normal">(optional — none selected by default)</small></h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted small mb-3">Select who should receive an email about this shipment. Leave both unchecked to create the shipment silently.</p>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 border rounded">
+                    <input class="form-check-input" type="checkbox" name="notify_receiver" id="notify_receiver" value="1">
+                    <label class="form-check-label ms-2" for="notify_receiver">
+                        <strong>Notify Receiver</strong>
+                        <div class="text-muted small">Send tracking details to the receiver's email</div>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check form-switch p-3 border rounded">
+                    <input class="form-check-input" type="checkbox" name="notify_sender" id="notify_sender" value="1">
+                    <label class="form-check-label ms-2" for="notify_sender">
+                        <strong>Notify Sender</strong>
+                        <div class="text-muted small">Send dispatch confirmation to the sender's email (requires sender email)</div>
+                    </label>
+                </div>
             </div>
         </div>
     </div>

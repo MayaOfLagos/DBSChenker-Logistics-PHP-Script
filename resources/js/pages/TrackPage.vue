@@ -10,7 +10,7 @@
 
     <main class="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-5 sm:px-6 lg:px-8">
       <header class="flex items-center justify-between gap-4">
-        <router-link to="/" class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3">
           <img
             v-if="brandLogo"
             :src="brandLogo"
@@ -20,7 +20,7 @@
           <div v-else class="flex h-11 w-11 items-center justify-center rounded-lg border border-white/15 bg-white/12 shadow-lg backdrop-blur-md">
             <span class="text-sm font-bold">{{ brandInitials }}</span>
           </div>
-        </router-link>
+        </a>
       </header>
 
       <section class="flex flex-1 items-center justify-center py-10">

@@ -47,7 +47,7 @@
             <div class="col-md-4">
                 <label class="form-label">Shipment Status</label>
                 <select class="form-control" name="status">
-                    @foreach(['Order Confirmed','Picked by Courier','On The Way','Custom Hold','Delivered','Approved','Available','Pending'] as $s)
+                    @foreach($shipmentStatuses as $s)
                         <option value="{{ $s }}" {{ old('status', $shipment->status) == $s ? 'selected' : '' }}>{{ $s }}</option>
                     @endforeach
                 </select>
@@ -144,8 +144,8 @@
                 <div class="mb-3">
                     <label class="form-label">Shipping Method <span class="text-danger">*</span></label>
                     <select class="form-control" name="freight_type" required>
-                        @foreach(['Road' => 'Road Transport','Air' => 'Air Freight','Sea' => 'Sea Freight','Rail' => 'Rail Transport','Multimodal' => 'Multimodal Transport'] as $val => $label)
-                            <option value="{{ $val }}" {{ old('freight_type', $shipment->freight_type) == $val ? 'selected' : '' }}>{{ $label }}</option>
+                        @foreach($freightTypes as $ft)
+                            <option value="{{ $ft }}" {{ old('freight_type', $shipment->freight_type) == $ft ? 'selected' : '' }}>{{ $ft }}</option>
                         @endforeach
                     </select>
                 </div>

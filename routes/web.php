@@ -17,10 +17,14 @@ require __DIR__ . '/user/web.php';
 require __DIR__ . '/botman.php';
 require __DIR__ . '/admin/shipment.php';
 
+// Public website (Bootstrap + logistic template CSS)
 Route::view('/', 'app')->name('home');
-Route::view('/result', 'app')->name('result');
-Route::view('/deposits', 'app')->name('deposits');
-Route::view('/payment', 'app')->name('payment');
-Route::view('/receipt/{id?}', 'app')->whereNumber('id')->name('receipt');
-Route::view('/invoice/{id}', 'app')->whereNumber('id')->name('invoice');
-Route::view('/printinvoice/{id}', 'app')->whereNumber('id')->name('printinvoice');
+
+// User portal (Tailwind-only, isolated from logistic template CSS)
+Route::view('/track', 'portal')->name('track');
+Route::view('/result', 'portal')->name('result');
+Route::view('/deposits', 'portal')->name('deposits');
+Route::view('/payment', 'portal')->name('payment');
+Route::view('/receipt/{id?}', 'portal')->whereNumber('id')->name('receipt');
+Route::view('/invoice/{id}', 'portal')->whereNumber('id')->name('invoice');
+Route::view('/printinvoice/{id}', 'portal')->whereNumber('id')->name('printinvoice');

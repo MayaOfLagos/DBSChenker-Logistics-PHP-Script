@@ -56,7 +56,7 @@
                         <label class="form-label">New Status <span class="text-danger">*</span></label>
                         <select class="form-control" name="status" required>
                             <option value="" disabled selected>Select Status</option>
-                            @foreach(['Order Confirmed','Picked by Courier','On The Way','Custom Hold','Delivered'] as $s)
+                            @foreach($shipmentStatuses as $s)
                                 <option value="{{ $s }}" {{ old('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
                             @endforeach
                         </select>

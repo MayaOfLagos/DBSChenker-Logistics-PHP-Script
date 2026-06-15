@@ -25,4 +25,6 @@ Route::prefix('frontend')->group(function () {
     Route::get('receipt/{id}', [FrontendController::class, 'receipt']);
     Route::get('invoice/{id}', [FrontendController::class, 'invoice']);
     Route::get('printinvoice/{id}', [FrontendController::class, 'printInvoice']);
+    Route::post('contact', [FrontendController::class, 'contactForm']);
+    Route::post('complaint', [FrontendController::class, 'complaintForm']);
 });

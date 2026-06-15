@@ -81,7 +81,7 @@
           <tr><th class="ps-3 text-muted" style="width:40%">Email</th><td>{{ $user->email }}</td></tr>
           <tr><th class="ps-3 text-muted">Phone</th><td>{{ $user->phone ?? '—' }}</td></tr>
           <tr><th class="ps-3 text-muted">Country</th><td>{{ $user->country ?? '—' }}</td></tr>
-          <tr><th class="ps-3 text-muted">Tracking #</th><td><code>{{ $user->trackingnumber ?? '—' }}</code></td></tr>
+          <tr><th class="ps-3 text-muted">Tracking No.</th><td><code>{{ $user->trackingnumber ?? '—' }}</code></td></tr>
           <tr><th class="ps-3 text-muted">Email Verified</th>
             <td>
               @if($user->email_verified_at)

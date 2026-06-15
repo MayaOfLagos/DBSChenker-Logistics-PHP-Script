@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ComplaintFormMail;
+use App\Mail\ContactFormMail;
 use App\Mail\DepositNotification;
 use App\Models\Deposit;
 use App\Models\GuestUser;
@@ -176,6 +178,75 @@ class FrontendController extends Controller
         return response()->json($this->invoice($id)->getData(true));
     }
 
+    public function contactForm(Request $request)
+    {
+        $data = $request->validate([
+            'firstname' => ['required', 'string', 'max:100'],
+            'lastname'  => ['required', 'string', 'max:100'],
+            'email'     => ['required', 'email', 'max:255'],
+            'phone'     => ['required', 'string', 'max:30'],
+            'subject'   => ['required', 'string', 'max:255'],
+            'company'   => ['nullable', 'string', 'max:255'],
+            'message'   => ['required', 'string', 'max:5000'],
+        ]);
+
+        $settings    = Settings::find(1);
+        $adminEmail  = $settings?->contact_email;
+        $systemEmail = config('mail.from.address');
+
+        try {
+            if ($adminEmail) {
+                Mail::to($adminEmail)->send(new ContactFormMail($data, true));
+            }
+
+            if ($systemEmail && $systemEmail !== $adminEmail) {
+                Mail::to($systemEmail)->send(new ContactFormMail($data, true));
+            }
+
+            Mail::to($data['email'])->send(new ContactFormMail($data, false));
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        return response()->json([
+            'message' => 'Thank you! Your message has been received. A member of our team will respond within one business day.',
+        ]);
+    }
+
+    public function complaintForm(Request $request)
+    {
+        $data = $request->validate([
+            'name'     => ['required', 'string', 'max:150'],
+            'email'    => ['required', 'email', 'max:255'],
+            'phone'    => ['nullable', 'string', 'max:30'],
+            'type'     => ['required', 'string', 'max:100'],
+            'tracking' => ['nullable', 'string', 'max:100'],
+            'message'  => ['required', 'string', 'max:5000'],
+        ]);
+
+        $settings    = Settings::find(1);
+        $adminEmail  = $settings?->contact_email;
+        $systemEmail = config('mail.from.address');
+
+        try {
+            if ($adminEmail) {
+                Mail::to($adminEmail)->send(new ComplaintFormMail($data, true));
+            }
+
+            if ($systemEmail && $systemEmail !== $adminEmail) {
+                Mail::to($systemEmail)->send(new ComplaintFormMail($data, true));
+            }
+
+            Mail::to($data['email'])->send(new ComplaintFormMail($data, false));
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        return response()->json([
+            'message' => 'Your complaint has been received and logged. Our compliance team will review it within 2 business days.',
+        ]);
+    }
+
     protected function settingsPayload(): array
     {
         $settings = Settings::find(1);
@@ -194,10 +265,13 @@ class FrontendController extends Controller
             'favicon'      => $settings?->favicon,
             'favicon_url'  => $settings?->favicon ? Storage::url($settings->favicon) : null,
             'whatsapp'          => $settings?->whatsapp,
+            'phone'             => $settings?->phone,
             'locations'         => $settings?->locations,
             'tido'              => $settings?->tido,
             'year_started'      => $settings?->twak,
             'google_translate'  => $settings?->google_translate ?? 'off',
+            'shipment_statuses' => $settings?->getShipmentStatusesWithDefault() ?? [],
+            'freight_types'     => $settings?->getFreightTypesWithDefault() ?? [],
         ];
     }
 

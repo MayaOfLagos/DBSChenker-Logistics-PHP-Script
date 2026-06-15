@@ -28,7 +28,7 @@ class CreateShipmentNotification extends Mailable
     public function build()
     {
 
-        $subject = "New Shipment - Tracking #{$this->shipment->trackingnumber}";
+        $subject = "New Shipment — Tracking {$this->shipment->trackingnumber}";
 
 
         return $this->subject($subject)

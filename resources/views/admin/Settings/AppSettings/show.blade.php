@@ -24,6 +24,9 @@
             <li class="nav-item">
                 <a class="nav-link" id="email-tab" data-bs-toggle="tab" href="#email">Email / Google</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="enums-tab" data-bs-toggle="tab" href="#enums">Shipment Enums</a>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -51,7 +54,11 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">WhatsApp Number <small class="text-danger">(leave empty to disable)</small></label>
-                            <input type="text" class="form-control" name="whatsapp" value="{{ $settings->whatsapp }}">
+                            <input type="text" class="form-control" name="whatsapp" value="{{ $settings->whatsapp }}" placeholder="+15551234567">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number <small class="text-muted">(for calls, shown site-wide)</small></label>
+                            <input type="text" class="form-control" name="phone" value="{{ $settings->phone }}" placeholder="+15551234567">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tido Livechat ID <small class="text-danger">(leave empty to disable)</small></label>
@@ -60,6 +67,10 @@
                         <div class="col-md-6">
                             <label class="form-label">Year Started</label>
                             <input type="text" class="form-control" name="twak" value="{{ $settings->twak }}" placeholder="Year site started">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tracking Prefix <small class="text-muted">(e.g. DBS, SHP, LOG)</small></label>
+                            <input type="text" class="form-control" name="tracking_prefix" value="{{ $settings->tracking_prefix }}" placeholder="Auto-derived from site name if empty" maxlength="10" style="text-transform:uppercase;">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Contact Email</label>
@@ -173,6 +184,68 @@
                     </div>
                 </form>
             </div>
+            {{-- Shipment Enums Tab --}}
+            <div class="tab-pane fade" id="enums">
+                <form method="POST" action="{{ route('updateShipmentEnums') }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="row g-4">
+
+                        {{-- Shipment Statuses --}}
+                        <div class="col-lg-6">
+                            <div class="card border">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0"><i class="bi bi-signpost-split me-2"></i>Shipment Statuses</h6>
+                                    <small class="text-muted">These are shown in the shipment progress tracker. <strong>Order matters</strong> — the 4th slot is the "hold/warning" state and the 5th is the final "delivered" state.</small>
+                                </div>
+                                <div class="card-body">
+                                    @php
+                                        $statusLabels = ['1st — Initial / Confirmed', '2nd — In Progress', '3rd — In Transit', '4th — Hold / Warning (amber)', '5th — Final / Delivered (green)'];
+                                    @endphp
+                                    @foreach($shipmentStatuses as $i => $status)
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">{{ $statusLabels[$i] ?? ($i+1) . 'th Status' }}</label>
+                                        <input type="text" class="form-control" name="status_{{ $i+1 }}" value="{{ $status }}" required>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Freight / Shipping Method Types --}}
+                        <div class="col-lg-6">
+                            <div class="card border">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0"><i class="bi bi-truck me-2"></i>Freight / Shipping Method Types</h6>
+                                    <small class="text-muted">Options shown in the "Shipping Method" dropdown when creating or editing shipments.</small>
+                                </div>
+                                <div class="card-body">
+                                    @foreach($freightTypes as $i => $type)
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Option {{ $i+1 }}</label>
+                                        <input type="text" class="form-control" name="freight_{{ $i+1 }}" value="{{ $type }}">
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-3 mb-0">
+                                <i class="bi bi-info-circle me-1"></i>
+                                <strong>Note:</strong> Existing shipments retain their current status/freight labels. Changing a label here affects new selections going forward and the public tracking page display.
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i> Save Shipment Enums
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>

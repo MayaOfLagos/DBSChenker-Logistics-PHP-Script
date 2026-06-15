@@ -17,12 +17,15 @@ class AppSettingsController extends Controller
     {
         $live_timezones = timezone_identifiers_list();
         include 'currencies.php';
+        $settings = Settings::where('id', '=', '1')->first();
         return view('admin.Settings.AppSettings.show', [
-            'title' => 'Website information settings',
-            'timezones' => $live_timezones,
-            'currencies' => $currencies,
-            'timezone' => config('app.timezone'),
-            'settings' => Settings::where('id', '=', '1')->first(),
+            'title'            => 'Website information settings',
+            'timezones'        => $live_timezones,
+            'currencies'       => $currencies,
+            'timezone'         => config('app.timezone'),
+            'settings'         => $settings,
+            'shipmentStatuses' => $settings?->getShipmentStatusesWithDefault() ?? [],
+            'freightTypes'     => $settings?->getFreightTypesWithDefault() ?? [],
         ]);
     }
     
@@ -120,12 +123,14 @@ class AppSettingsController extends Controller
                 'site_address' => $request['site_address'],
                 'welcome_message' => $request->welcome_message,
                 'whatsapp' => $request->whatsapp,
+                'phone' => $request->phone,
                 'twak' => $request->twak,
                 'tido' => $request->tido,
                 'year' => $request->year,
                 'locations' => $request->locations,
                 'usertheme' => $request->usertheme,
                 'contact_email' => $request->contact_email,
+                'tracking_prefix' => strtoupper(trim($request->tracking_prefix ?? '')),
             ]);
 
         $moreset = SettingsCont::find(1);
@@ -166,6 +171,36 @@ class AppSettingsController extends Controller
             'should_cancel_plan' => $request->should_cancel_plan,
         ]);
         return redirect()->back()->with('success', 'Settings Saved successfully.');
+    }
+
+    public function updateShipmentEnums(Request $request)
+    {
+        $statuses = array_values(array_filter(array_map('trim', [
+            $request->input('status_1'),
+            $request->input('status_2'),
+            $request->input('status_3'),
+            $request->input('status_4'),
+            $request->input('status_5'),
+        ])));
+
+        $freightTypes = array_values(array_filter(array_map('trim', [
+            $request->input('freight_1'),
+            $request->input('freight_2'),
+            $request->input('freight_3'),
+            $request->input('freight_4'),
+            $request->input('freight_5'),
+        ])));
+
+        if (count($statuses) < 2) {
+            return redirect()->back()->with('message', 'At least 2 shipment statuses are required.');
+        }
+
+        Settings::where('id', 1)->update([
+            'shipment_statuses' => json_encode($statuses),
+            'freight_types'     => json_encode($freightTypes),
+        ]);
+
+        return redirect()->back()->with('success', 'Shipment enums updated successfully.');
     }
 
     // Update email preference
