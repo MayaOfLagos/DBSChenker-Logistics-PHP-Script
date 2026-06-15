@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 
 define('PASSWORD', 'dbschenker2026!');
 define('BASE_DIR', dirname(__DIR__));
-define('PHP_BIN', '/usr/local/bin/php');
+define('ARTISAN_PHP', PHP_BINARY);
 
 session_start();
 
@@ -38,7 +38,7 @@ $execError = '';
 function runArtisan(string $cmd): array
 {
     $artisan  = BASE_DIR . '/artisan';
-    $phpBin   = PHP_BIN;
+    $phpBin   = ARTISAN_PHP;
     $fullArgs = $phpBin . ' ' . $artisan . ' ' . $cmd;
 
     // Try proc_open first (best output capture)
