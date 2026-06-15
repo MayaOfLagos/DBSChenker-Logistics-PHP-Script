@@ -1,4 +1,9 @@
 @extends('layouts.app1')
+
+@push('style')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/icheck-bootstrap@3.0.1/icheck-bootstrap.min.css" crossorigin="anonymous">
+@endpush
+
 @section('content')
 <x-danger-alert />
 <x-success-alert />
@@ -169,21 +174,29 @@
         <p class="text-muted small mb-3">Select who should receive an email about this shipment. Leave both unchecked to create the shipment silently.</p>
         <div class="row g-3">
             <div class="col-md-6">
-                <div class="form-check form-switch p-3 border rounded">
-                    <input class="form-check-input" type="checkbox" name="notify_receiver" id="notify_receiver" value="1">
-                    <label class="form-check-label ms-2" for="notify_receiver">
-                        <strong>Notify Receiver</strong>
-                        <div class="text-muted small">Send tracking details to the receiver's email</div>
-                    </label>
+                <div class="card border-primary mb-0 h-100">
+                    <div class="card-body">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="notify_receiver" name="notify_receiver" value="1">
+                            <label for="notify_receiver"><strong>Notify Receiver</strong></label>
+                        </div>
+                        <p class="text-muted small mb-0 mt-1" style="padding-left:29px">
+                            Send an email with tracking details to the receiver's email address.
+                        </p>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-check form-switch p-3 border rounded">
-                    <input class="form-check-input" type="checkbox" name="notify_sender" id="notify_sender" value="1">
-                    <label class="form-check-label ms-2" for="notify_sender">
-                        <strong>Notify Sender</strong>
-                        <div class="text-muted small">Send dispatch confirmation to the sender's email (requires sender email)</div>
-                    </label>
+                <div class="card border-warning mb-0 h-100">
+                    <div class="card-body">
+                        <div class="icheck-warning">
+                            <input type="checkbox" id="notify_sender" name="notify_sender" value="1">
+                            <label for="notify_sender"><strong>Notify Sender</strong></label>
+                        </div>
+                        <p class="text-muted small mb-0 mt-1" style="padding-left:29px">
+                            Send a dispatch confirmation to the sender's email (requires sender email).
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
