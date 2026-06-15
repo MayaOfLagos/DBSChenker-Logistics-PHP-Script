@@ -45,7 +45,7 @@
                     <div class="inner-layer"><div data-animation="fade-in-bottom" data-delay="0.7s" data-duration="1s">DB Schenker specializes in managing the transportation,<br>storage and distribution of goods worldwide.</div></div>
                   </div>
                   <div class="slider-btn">
-                    <router-link to="/contact" class="default-btn" data-animation="fade-in-bottom" data-delay="0.9s">Book Your Parcel</router-link>
+                    <router-link to="/track" class="default-btn" data-animation="fade-in-bottom" data-delay="0.9s">Track Your Parcel</router-link>
                   </div>
                 </div>
               </div>
@@ -313,7 +313,7 @@
             <div class="section-heading white">
               <h3 class="sub-heading is-border border-anim">Trusted Global Shipping!<span class="sh-underline"><img class="sh-truck" src="/assets/img/truck.svg" alt="truck"></span></h3>
               <h2 class="text-anim" data-effect="fade-in-right" data-split="char" data-delay="0.3" data-duration="1">Ensure Safe Transportation<br>Fast Delivery <span class="hl">Service!</span></h2>
-              <router-link to="/contact" class="default-btn wow fade-in-bottom" data-wow-delay="200ms">Book Your Parcel</router-link>
+              <router-link to="/track" class="default-btn wow fade-in-bottom" data-wow-delay="200ms">Track Your Parcel</router-link>
             </div>
           </div>
           <div class="cta-men wow fade-in-bottom" data-wow-delay="200ms"></div>
