@@ -49,7 +49,7 @@ class ShipmentController extends Controller
             'cstatus' => 'required',
             'freight_type' => 'required',
             'expected_delivery' => 'required',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Shipment Photo
+            'photo' => 'nullable|file|extensions:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -392,7 +392,7 @@ class ShipmentController extends Controller
             'expected_delivery' => 'required',
             'percentage_complete' => 'nullable|numeric|min:0|max:100',
             'status'            => ['required', 'string', Rule::in($this->getShipmentStatuses())],
-            'photo'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo'             => 'nullable|file|extensions:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -816,8 +816,17 @@ class ShipmentController extends Controller
     private function storeShipmentPhoto(\Illuminate\Http\UploadedFile $photo): string
     {
         $fileName = time() . '_' . Str::random(8) . '.' . $photo->getClientOriginalExtension();
+        $dir = storage_path('app/public/photos');
 
-        return $photo->storeAs('photos', $fileName, 'public');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        // move() uses move_uploaded_file() natively and avoids the finfo
+        // extension that Flysystem's MIME detector requires.
+        $photo->move($dir, $fileName);
+
+        return 'photos/' . $fileName;
     }
 
     private function deleteStoredShipmentPhoto(?string $path): void

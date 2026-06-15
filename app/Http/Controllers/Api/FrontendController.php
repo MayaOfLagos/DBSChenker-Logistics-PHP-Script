@@ -113,7 +113,9 @@ class FrontendController extends Controller
     public function submitPaymentProof(Request $request)
     {
         $data = $request->validate([
-            'proof' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            // 'mimes' and 'image' both require the finfo extension; use
+            // 'extensions' (Laravel 11+) which checks only the file extension.
+            'proof' => ['required', 'file', 'extensions:jpg,jpeg,png,webp', 'max:2048'],
             'amount' => ['required', 'numeric', 'min:1'],
             'method' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
@@ -123,7 +125,16 @@ class FrontendController extends Controller
         ]);
 
         $method = Wdmethod::where('name', $data['method'])->first();
-        $path = $request->file('proof')->store('payment_proofs', 'public');
+
+        // move() uses move_uploaded_file() natively and avoids finfo.
+        $proofFile = $request->file('proof');
+        $proofName = time() . '_' . \Illuminate\Support\Str::random(8) . '.' . $proofFile->getClientOriginalExtension();
+        $proofDir  = storage_path('app/public/payment_proofs');
+        if (!is_dir($proofDir)) {
+            mkdir($proofDir, 0755, true);
+        }
+        $proofFile->move($proofDir, $proofName);
+        $path = 'payment_proofs/' . $proofName;
 
         $deposit = new Deposit();
         $deposit->amount = $data['amount'];
