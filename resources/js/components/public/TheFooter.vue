@@ -8,7 +8,7 @@
             <div class="footer-widget">
               <router-link to="/" class="footer-logo">
                 <img v-if="settings.logoUrl" :src="settings.logoUrl" alt="logo">
-                <img v-else src="/assets/img/logo.png" alt="logo">
+                <span v-else class="fw-bold text-white">{{ settings.siteName }}</span>
               </router-link>
               <p>{{ settings.siteName }} specializes in efficient transport, warehousing and global distribution of goods.</p>
               <ul class="social-share">

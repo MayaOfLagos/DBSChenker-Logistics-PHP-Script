@@ -40,10 +40,13 @@
   <!--begin::Sidebar Brand-->
   <div class="sidebar-brand">
     <a href="{{ url('/admin/dashboard') }}" class="brand-link">
-      <img src="{{ asset('storage/' . ($settings->logo ?? 'logo.png')) }}"
-        alt="{{ $settings->site_name }}"
-        class="brand-image opacity-75 shadow"
-        onerror="this.style.display='none'">
+      @if($settings->logo)
+        <img src="{{ asset('storage/' . $settings->logo) }}"
+          alt="{{ $settings->site_name }}"
+          class="brand-image opacity-75 shadow">
+      @else
+        <span class="brand-text fw-bold">{{ $settings->site_name }}</span>
+      @endif
     </a>
   </div>
   <!--end::Sidebar Brand-->

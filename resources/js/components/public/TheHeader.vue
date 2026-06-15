@@ -5,7 +5,7 @@
         <div class="site-logo">
           <router-link to="/">
             <img v-if="settings.logoUrl" :src="settings.logoUrl" alt="DB Schenker" />
-            <img v-else src="/assets/img/logo-light.png" alt="DB Schenker" />
+            <span v-else class="fw-bold text-white fs-5">{{ settings.siteName }}</span>
           </router-link>
         </div>
         <div class="main-header-info">
