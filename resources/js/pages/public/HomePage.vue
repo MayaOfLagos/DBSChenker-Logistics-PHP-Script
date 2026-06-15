@@ -118,7 +118,7 @@
         </div>
 
         <!-- 4-per-view swipeable service carousel -->
-        <div class="swiper-outside service-wrap position-relative">
+        <div class="swiper-outside">
           <div class="service-carousel">
             <div class="swiper-wrapper">
               <div class="swiper-slide" v-for="service in services" :key="service.id">
@@ -135,10 +135,10 @@
                 </div>
               </div>
             </div>
-            <div class="service-pagination carousel-pagination mt-30"></div>
+            <div class="carousel-pagination"></div>
           </div>
-          <div class="swiper-nav service-carousel-next"><i class="fa-regular fa-long-arrow-right"></i></div>
-          <div class="swiper-nav service-carousel-prev"><i class="fa-regular fa-long-arrow-left"></i></div>
+          <div class="swiper-nav swiper-next service-carousel-next"><i class="fa-regular fa-long-arrow-right"></i></div>
+          <div class="swiper-nav swiper-prev service-carousel-prev"><i class="fa-regular fa-long-arrow-left"></i></div>
         </div>
       </div>
     </section>
@@ -668,6 +668,25 @@ function submitQuote() {
 .stat-suffix { font-size: 0.75em; font-weight: 700; opacity: 0.85; }
 
 /* ── Service carousel image frame ────────────────────── */
+.service-section .swiper-outside {
+  position: relative;
+  max-width: 100%;
+}
+
+.service-carousel {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.service-carousel .swiper-wrapper {
+  min-width: 0;
+}
+
+.service-carousel .swiper-slide {
+  height: auto;
+  min-width: 0;
+}
+
 .service-thumb-frame {
   width: 100%;
   height: 220px;
@@ -686,14 +705,4 @@ function submitQuote() {
 .service-item:hover .service-thumb-frame img {
   transform: scale(1.06);
 }
-
-/* ── Service carousel nav scoping ────────────────────── */
-.service-wrap .swiper-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-}
-.service-wrap .service-carousel-next { right: -20px; }
-.service-wrap .service-carousel-prev { left: -20px; }
 </style>

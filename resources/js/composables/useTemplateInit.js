@@ -162,7 +162,7 @@ export function useTemplateInit(options = {}) {
                     slidesPerView: 4,
                     spaceBetween: 24,
                     loop: true,
-                    pagination: { el: '.service-carousel .service-pagination', clickable: true },
+                    pagination: { el: '.service-carousel .carousel-pagination', clickable: true },
                     navigation: { nextEl: '.service-carousel-next', prevEl: '.service-carousel-prev' },
                     breakpoints: {
                         320:  { slidesPerView: 1, spaceBetween: 16 },
