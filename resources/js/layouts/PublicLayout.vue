@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, watch } from 'vue'
 import TheHeader from '../components/public/TheHeader.vue'
 import TheFooter from '../components/public/TheFooter.vue'
 import { useSettingsStore } from '../stores/useSettingsStore.js'
@@ -26,22 +26,75 @@ import { useSettingsStore } from '../stores/useSettingsStore.js'
 const settingsStore = useSettingsStore()
 settingsStore.fetch()
 
-onMounted(() => {
-  // Sticky header clone
-  if (typeof $ !== 'undefined' && $(window).width() > 992) {
-    const mainHeader = $('.main-header')
-    if (mainHeader.length && !$('.sticky-header').length) {
-      mainHeader.after('<div class="sticky-header"></div>')
-      $('.sticky-header').html(mainHeader.clone())
-      $(window).on('scroll.sticky', function () {
-        if ($(window).scrollTop() >= mainHeader.height()) {
-          $('.sticky-header').addClass('sticky-fixed-top')
-        } else {
-          $('.sticky-header').removeClass('sticky-fixed-top')
-        }
-      })
-    }
+let stickyScrollHandler = null
+let stopStickyWatcher = null
+
+function removeStickyHeader() {
+  document.querySelectorAll('.sticky-header').forEach((header) => header.remove())
+
+  if (stickyScrollHandler) {
+    window.removeEventListener('scroll', stickyScrollHandler)
+    stickyScrollHandler = null
   }
+}
+
+function replacePlaceholderLogos(header) {
+  header.querySelectorAll('img').forEach((image) => {
+    const src = image.getAttribute('src') || ''
+    const isPlaceholderLogo = /(^|\/)assets\/img\/logo(-light)?\.png($|\?)/.test(src)
+
+    if (!isPlaceholderLogo) return
+
+    if (settingsStore.logoUrl) {
+      image.setAttribute('src', settingsStore.logoUrl)
+      return
+    }
+
+    const textLogo = document.createElement('span')
+    textLogo.className = 'fw-bold text-white fs-5'
+    textLogo.textContent = settingsStore.siteName || 'DB Schenker'
+    image.replaceWith(textLogo)
+  })
+}
+
+function buildStickyHeader() {
+  removeStickyHeader()
+
+  if (window.innerWidth <= 992) return
+
+  const mainHeader = Array.from(document.querySelectorAll('.main-header'))
+    .find((header) => !header.closest('.sticky-header'))
+
+  if (!mainHeader) return
+
+  const stickyHeader = document.createElement('div')
+  const headerClone = mainHeader.cloneNode(true)
+  stickyHeader.className = 'sticky-header'
+  replacePlaceholderLogos(headerClone)
+  stickyHeader.appendChild(headerClone)
+  mainHeader.after(stickyHeader)
+
+  const triggerPoint = mainHeader.offsetHeight
+  stickyScrollHandler = () => {
+    stickyHeader.classList.toggle('sticky-fixed-top', window.scrollY >= triggerPoint)
+  }
+  window.addEventListener('scroll', stickyScrollHandler, { passive: true })
+  stickyScrollHandler()
+}
+
+async function syncStickyHeader() {
+  await nextTick()
+  buildStickyHeader()
+}
+
+onMounted(() => {
+  syncStickyHeader()
+  stopStickyWatcher = watch(
+    () => [settingsStore.loaded, settingsStore.logoUrl, settingsStore.siteName],
+    syncStickyHeader,
+    { flush: 'post' }
+  )
+  window.addEventListener('resize', syncStickyHeader)
 
   // Preloader
   if (typeof gsap !== 'undefined') {
@@ -62,5 +115,11 @@ onMounted(() => {
       if (el) el.remove()
     }, 500)
   }
+})
+
+onBeforeUnmount(() => {
+  removeStickyHeader()
+  stopStickyWatcher?.()
+  window.removeEventListener('resize', syncStickyHeader)
 })
 </script>
