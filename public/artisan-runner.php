@@ -9,7 +9,30 @@ error_reporting(E_ALL);
 
 define('PASSWORD', 'dbschenker2026!');
 define('BASE_DIR', dirname(__DIR__));
-define('ARTISAN_PHP', PHP_BINARY);
+define('ARTISAN_PHP', (function (): string {
+    // PHP_BINARY = path of the interpreter running THIS script.
+    // On PHP-FPM/LiteSpeed it may be an FPM/lsphp binary that does not work
+    // as a general CLI tool, so validate it first.
+    $current = PHP_BINARY;
+    if ($current && !str_contains($current, 'fpm') && !str_contains($current, 'lsphp') && is_executable($current)) {
+        return $current;
+    }
+    // cPanel EasyApache 4 — newest PHP first, then generic fallbacks
+    foreach ([
+        '/opt/cpanel/ea-php84/root/usr/bin/php',
+        '/opt/cpanel/ea-php83/root/usr/bin/php',
+        '/usr/local/bin/php84',
+        '/usr/local/bin/php83',
+        '/usr/local/bin/php8.4',
+        '/usr/local/bin/php8.3',
+        '/usr/local/bin/php',
+    ] as $bin) {
+        if (is_executable($bin)) {
+            return $bin;
+        }
+    }
+    return $current ?: 'php';
+})());
 
 session_start();
 
