@@ -25,6 +25,7 @@ class AppSettingsController extends Controller
             'timezone'         => config('app.timezone'),
             'settings'         => $settings,
             'shipmentStatuses' => $settings?->getShipmentStatusesWithDefault() ?? [],
+            'statusColors'     => $settings?->getStatusColorsWithDefault() ?? [],
             'freightTypes'     => $settings?->getFreightTypesWithDefault() ?? [],
         ]);
     }
@@ -209,12 +210,20 @@ class AppSettingsController extends Controller
             $request->input('freight_5'),
         ])));
 
+        $allowed = ['blue', 'emerald', 'amber', 'red', 'purple', 'orange', 'slate'];
+        $colors  = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $c = $request->input("color_{$i}", 'blue');
+            $colors[] = in_array($c, $allowed, true) ? $c : 'blue';
+        }
+
         if (count($statuses) < 2) {
             return redirect()->back()->with('message', 'At least 2 shipment statuses are required.');
         }
 
         Settings::where('id', 1)->update([
             'shipment_statuses' => json_encode($statuses),
+            'status_colors'     => json_encode($colors),
             'freight_types'     => json_encode($freightTypes),
         ]);
 

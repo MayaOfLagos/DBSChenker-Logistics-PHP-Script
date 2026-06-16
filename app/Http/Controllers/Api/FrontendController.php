@@ -289,6 +289,7 @@ class FrontendController extends Controller
             'year_started'      => $settings?->twak,
             'google_translate'  => $settings?->google_translate ?? 'off',
             'shipment_statuses' => $settings?->getShipmentStatusesWithDefault() ?? [],
+            'status_colors'     => $settings?->getStatusColorsWithDefault() ?? [],
             'freight_types'     => $settings?->getFreightTypesWithDefault() ?? [],
         ];
     }

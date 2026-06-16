@@ -29,37 +29,140 @@
 
       <main class="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
 
-        <!-- Loading -->
-        <div v-if="loading" class="flex min-h-[60vh] items-center justify-center">
-          <div class="flex flex-col items-center gap-4 rounded-2xl bg-white p-10 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-            <svg class="h-10 w-10 animate-spin text-red-600" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-            </svg>
-            <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Fetching shipment record…</p>
+        <!-- ══ SKELETON ══════════════════════════════════════════════════════════ -->
+        <template v-if="loading">
+
+          <!-- Skeleton: Hero Card -->
+          <section class="relative mb-4 overflow-hidden rounded-2xl bg-slate-950 shadow-xl sm:mb-5">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(239,68,68,0.15),_transparent_55%),linear-gradient(150deg,_rgba(15,23,42,1),_rgba(30,41,59,0.95))]"></div>
+            <div class="relative p-5 sm:p-7 lg:flex lg:items-start lg:justify-between lg:gap-8 lg:p-8 animate-pulse">
+              <div class="flex-1 min-w-0">
+                <div class="mb-3 flex w-full items-center justify-between gap-2">
+                  <div class="h-6 w-36 rounded-full bg-white/10"></div>
+                  <div class="h-5 w-12 rounded-full bg-white/10"></div>
+                </div>
+                <div class="h-3 w-28 rounded bg-white/10"></div>
+                <div class="mt-2 h-8 w-56 rounded-lg bg-white/15 sm:h-10 sm:w-80 lg:w-96"></div>
+                <div class="mt-2.5 h-3 w-44 rounded bg-white/10"></div>
+              </div>
+              <div class="mt-4 w-full rounded-xl border border-white/10 bg-white/10 px-4 py-3 sm:px-5 sm:py-4 lg:mt-0 lg:w-48 lg:shrink-0">
+                <div class="h-3 w-24 rounded bg-white/10"></div>
+                <div class="mt-2.5 h-5 w-32 rounded-full bg-white/10"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Skeleton: Mobile Quick Actions -->
+          <div class="mb-4 sm:hidden animate-pulse">
+            <div class="h-12 w-full rounded-xl bg-slate-200 dark:bg-slate-800"></div>
           </div>
-        </div>
+
+          <!-- Skeleton: Progress Stepper -->
+          <section class="mb-4 rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:mb-5">
+            <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800 sm:px-6 sm:py-4 animate-pulse">
+              <div class="h-4 w-36 rounded bg-slate-200 dark:bg-slate-700"></div>
+              <div class="flex items-center gap-2">
+                <div class="h-1.5 w-20 rounded-full bg-slate-200 dark:bg-slate-700 sm:w-32"></div>
+                <div class="h-3 w-8 rounded bg-slate-200 dark:bg-slate-700"></div>
+              </div>
+            </div>
+            <div class="overflow-x-auto px-4 py-5 sm:px-6 sm:py-6">
+              <div class="flex min-w-max items-start gap-0 animate-pulse">
+                <div v-for="i in 5" :key="`sk-step-${i}`" class="flex w-28 flex-col items-center px-1 sm:w-32 sm:px-2">
+                  <div class="h-14 w-14 rounded-full bg-slate-200 dark:bg-slate-700 sm:h-16 sm:w-16"></div>
+                  <div class="mt-2.5 h-3 w-16 rounded bg-slate-200 dark:bg-slate-700"></div>
+                  <div class="mt-1.5 h-2.5 w-12 rounded bg-slate-100 dark:bg-slate-800"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Skeleton: Info Cards -->
+          <section class="mb-4 grid grid-cols-2 gap-3 sm:mb-5 sm:gap-4 xl:grid-cols-4">
+            <div v-for="i in 4" :key="`sk-card-${i}`"
+                 class="rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 p-4 sm:p-5 animate-pulse">
+              <div class="mb-3 h-3 w-20 rounded bg-slate-200 dark:bg-slate-700"></div>
+              <div class="space-y-2">
+                <div class="h-3 w-full rounded bg-slate-100 dark:bg-slate-800"></div>
+                <div class="h-3 w-4/5 rounded bg-slate-100 dark:bg-slate-800"></div>
+                <div class="h-3 w-3/4 rounded bg-slate-100 dark:bg-slate-800"></div>
+                <div class="h-3 w-2/3 rounded bg-slate-100 dark:bg-slate-800"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Skeleton: History + Map -->
+          <section class="mb-4 grid gap-4 sm:mb-5 lg:grid-cols-[0.85fr_1.5fr]">
+            <!-- History -->
+            <div class="rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+              <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800 sm:px-6 sm:py-4 animate-pulse">
+                <div class="h-4 w-32 rounded bg-slate-200 dark:bg-slate-700"></div>
+                <div class="h-3 w-16 rounded bg-slate-100 dark:bg-slate-800"></div>
+              </div>
+              <div class="p-4 sm:p-5 space-y-3 animate-pulse">
+                <div v-for="i in 4" :key="`sk-track-${i}`" class="flex gap-3">
+                  <div class="h-7 w-7 shrink-0 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+                  <div class="flex-1 rounded-xl border border-slate-100 dark:border-slate-800 px-3 py-2.5">
+                    <div class="mb-2 flex items-center justify-between gap-2">
+                      <div class="h-4 w-16 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+                      <div class="h-3 w-20 rounded bg-slate-100 dark:bg-slate-800"></div>
+                    </div>
+                    <div class="h-3 w-3/4 rounded bg-slate-100 dark:bg-slate-800"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Map -->
+            <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+              <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-800 sm:px-6 sm:py-4 animate-pulse">
+                <div class="h-4 w-32 rounded bg-slate-200 dark:bg-slate-700"></div>
+                <div class="h-3 w-24 rounded bg-slate-100 dark:bg-slate-800"></div>
+              </div>
+              <div class="h-60 animate-pulse bg-slate-200 dark:bg-slate-800 sm:h-72 lg:h-[28rem]">
+                <div class="flex h-full items-center justify-center">
+                  <svg class="h-10 w-10 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Skeleton: Parcel Information -->
+          <section class="mb-4 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:mb-5">
+            <div class="flex items-center border-b border-slate-100 px-4 py-3 dark:border-slate-800 sm:px-6 sm:py-4 animate-pulse">
+              <div class="h-4 w-40 rounded bg-slate-200 dark:bg-slate-700"></div>
+            </div>
+            <div class="p-4 sm:p-5 lg:p-6 animate-pulse">
+              <div class="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
+                <div v-for="i in 6" :key="`sk-stat-${i}`"
+                     class="rounded-xl border border-slate-100 dark:border-slate-800 p-3">
+                  <div class="mb-2 h-2.5 w-16 rounded bg-slate-200 dark:bg-slate-700"></div>
+                  <div class="h-4 w-24 rounded bg-slate-100 dark:bg-slate-800"></div>
+                </div>
+              </div>
+              <div class="mt-4 hidden gap-3 sm:flex">
+                <div class="h-9 w-28 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+                <div class="h-9 w-24 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+              </div>
+            </div>
+          </section>
+
+        </template>
 
         <template v-else-if="courier">
 
           <!-- ══ HERO CARD ════════════════════════════════════════════════════════ -->
           <section class="relative mb-4 overflow-hidden rounded-2xl bg-slate-950 shadow-xl sm:mb-5">
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(239,68,68,0.3),_transparent_55%),linear-gradient(150deg,_rgba(15,23,42,1),_rgba(30,41,59,0.95))]"></div>
+            <img :src="stampImage" alt="" aria-hidden="true" class="pointer-events-none select-none absolute bottom-4 right-4 h-36 w-36 rotate-[-8deg] object-contain opacity-10 sm:h-48 sm:w-48 lg:h-56 lg:w-56">
             <div class="relative p-5 sm:p-7 lg:flex lg:items-start lg:justify-between lg:gap-8 lg:p-8">
               <div class="flex-1 min-w-0">
-                <div class="mb-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
-                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                  Verified Shipment
-                </div>
-                <p class="text-[10px] font-semibold tracking-widest text-white/50 uppercase sm:text-xs">Tracking Number</p>
-                <div class="mt-1.5 flex flex-wrap items-center gap-2">
-                  <h1 class="font-mono text-xl font-bold tracking-widest text-white sm:text-3xl lg:text-4xl break-all">{{ courier.trackingnumber }}</h1>
-                  <span :class="statusPillClass(courier.status, true)" class="rounded-full px-2.5 py-1 text-[10px] font-bold sm:text-xs">
-                    {{ courier.status || 'In Processing' }}
+                <div class="mb-3 flex w-full items-center justify-between gap-2">
+                  <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white/80">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                    Verified Shipment
                   </span>
-                </div>
-                <p class="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-white/55 sm:text-sm">
-                  Updated {{ formatDateTime(lastUpdated) }}
                   <span v-if="isLive" class="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400 sm:text-xs">
                     <span class="relative flex h-1.5 w-1.5">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -67,18 +170,21 @@
                     </span>
                     Live
                   </span>
+                </div>
+                <p class="text-[10px] font-semibold tracking-widest text-white/50 uppercase sm:text-xs">Tracking Number</p>
+                <div class="mt-1.5 flex flex-wrap items-center gap-2">
+                  <h1 class="font-mono text-xl font-bold tracking-widest text-white sm:text-3xl lg:text-4xl break-all">{{ courier.trackingnumber }}</h1>
+                </div>
+                <p class="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-white/55 sm:text-sm">
+                  Updated {{ formatDateTime(lastUpdated) }}
                 </p>
               </div>
               <!-- Shipment Status -->
-              <div class="mt-4 flex items-center gap-3 lg:mt-0 lg:shrink-0">
-                <div class="rounded-xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-md sm:px-5 sm:py-4">
-                  <p class="text-[10px] font-semibold uppercase tracking-wider text-white/50">Shipment Status</p>
-                  <p class="mt-1.5 text-xl font-black text-white sm:text-2xl">{{ courier.status || 'In Processing' }}</p>
-                  <span :class="statusPillClass(courier.status, true)" class="mt-2 inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold sm:text-xs">
-                    {{ courier.status || 'In Processing' }}
-                  </span>
-                </div>
-                <img :src="stampImage" alt="" class="h-16 w-16 rotate-[-8deg] object-contain opacity-40 sm:h-20 sm:w-20 lg:h-24 lg:w-24">
+              <div class="mt-4 w-full rounded-xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-md sm:px-5 sm:py-4 lg:mt-0 lg:w-auto lg:shrink-0">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-white/50">Shipment Status</p>
+                <span :class="statusPillClass(courier.status, true)" class="mt-2 inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold sm:text-xs">
+                  {{ courier.status || 'In Processing' }}
+                </span>
               </div>
             </div>
           </section>
@@ -249,7 +355,15 @@
               </div>
 
               <div v-if="parcelPhotoUrl" class="mt-4 overflow-hidden rounded-xl">
-                <img :src="parcelPhotoUrl" alt="Parcel photo" class="w-full object-cover" style="max-height:240px">
+                <button type="button" class="group relative block w-full cursor-zoom-in overflow-hidden rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+                        @click="photoDialogOpen = true">
+                  <img :src="parcelPhotoUrl" alt="Parcel photo" class="w-full object-cover transition duration-300 group-hover:scale-[1.02]" style="max-height:240px">
+                  <span class="absolute inset-0 flex items-center justify-center bg-black/0 transition duration-300 group-hover:bg-black/25">
+                    <span class="scale-75 rounded-full bg-black/60 p-2 opacity-0 backdrop-blur-sm transition duration-300 group-hover:scale-100 group-hover:opacity-100">
+                      <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
+                    </span>
+                  </span>
+                </button>
               </div>
 
               <!-- Desktop actions -->
@@ -293,6 +407,33 @@
 
       </main>
     </div>
+
+    <!-- ══ PHOTO LIGHTBOX ════════════════════════════════════════════════════ -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0">
+        <div v-if="photoDialogOpen"
+             class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+             role="dialog" aria-modal="true" aria-label="Parcel photo"
+             @click.self="photoDialogOpen = false"
+             @keydown.esc="photoDialogOpen = false">
+          <!-- Close button -->
+          <button type="button"
+                  class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/25"
+                  @click="photoDialogOpen = false" aria-label="Close">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+          <!-- Image -->
+          <img :src="parcelPhotoUrl" alt="Parcel photo"
+               class="max-h-[90vh] max-w-[92vw] rounded-xl object-contain shadow-2xl">
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -309,8 +450,9 @@ const courier = ref(null)
 const tracks = ref([])
 const summary = ref({})
 const mapRef = ref(null)
-const isDark = ref(false)
-const isLive = ref(false)
+const isDark         = ref(false)
+const isLive         = ref(false)
+const photoDialogOpen = ref(false)
 const activeLogo = computed(() =>
   isDark.value
     ? (settings.value?.logo_dark_url ?? settings.value?.logo_url ?? null)
@@ -563,7 +705,14 @@ onMounted(async () => {
   loading.value = false
 })
 
+function onKeyDown(e) {
+  if (e.key === 'Escape') photoDialogOpen.value = false
+}
+
+onMounted(() => document.addEventListener('keydown', onKeyDown))
+
 onBeforeUnmount(() => {
+  document.removeEventListener('keydown', onKeyDown)
   stopPolling()
   destroyMap()
 })
@@ -743,28 +892,38 @@ function markerIcon(label, color = '#ef4444') {
   })
 }
 
+// Explicit Tailwind class map — all variants listed statically so JIT keeps them
+const STATUS_COLOR_CLASSES = {
+  blue:    { pill: 'bg-blue-100 text-blue-800',    pillDark: 'bg-blue-200 text-blue-950',      dot: 'bg-blue-600',    seg: 'bg-blue-500'    },
+  emerald: { pill: 'bg-emerald-100 text-emerald-800', pillDark: 'bg-emerald-400 text-emerald-950', dot: 'bg-emerald-600', seg: 'bg-emerald-600' },
+  amber:   { pill: 'bg-amber-100 text-amber-800',  pillDark: 'bg-amber-300 text-amber-950',    dot: 'bg-amber-500',   seg: 'bg-amber-500'   },
+  red:     { pill: 'bg-red-100 text-red-800',      pillDark: 'bg-red-300 text-red-950',        dot: 'bg-red-600',     seg: 'bg-red-600'     },
+  purple:  { pill: 'bg-purple-100 text-purple-800', pillDark: 'bg-purple-200 text-purple-950', dot: 'bg-purple-600',  seg: 'bg-purple-500'  },
+  orange:  { pill: 'bg-orange-100 text-orange-800', pillDark: 'bg-orange-200 text-orange-950', dot: 'bg-orange-500',  seg: 'bg-orange-500'  },
+  slate:   { pill: 'bg-slate-100 text-slate-600',  pillDark: 'bg-white text-slate-900',        dot: 'bg-slate-500',   seg: 'bg-slate-400'   },
+}
+
+function resolveStatusColor(status) {
+  const statusList   = statusOrder.value
+  const colorList    = settings.value?.status_colors ?? []
+  const idx          = statusList.findIndex(s => normalizeStatus(s) === normalizeStatus(status))
+  const colorName    = (idx >= 0 ? colorList[idx] : null) ?? 'blue'
+  return STATUS_COLOR_CLASSES[colorName] ?? STATUS_COLOR_CLASSES.blue
+}
+
 function statusPillClass(status, dark = false) {
-  const normalized = normalizeStatus(status)
-  if (normalized === 'delivered') return dark ? 'bg-emerald-400 text-emerald-950' : 'bg-emerald-100 text-emerald-800'
-  if (normalized === 'custom hold' || normalized === 'at customs') return dark ? 'bg-amber-300 text-amber-950' : 'bg-amber-100 text-amber-800'
-  if (normalized === 'on hold') return dark ? 'bg-red-300 text-red-950' : 'bg-red-100 text-red-800'
-  return dark ? 'bg-white text-slate-900' : 'bg-blue-100 text-blue-800'
+  const c = resolveStatusColor(status)
+  return dark ? c.pillDark : c.pill
 }
 
 function timelineDotClass(status) {
-  const normalized = normalizeStatus(status)
-  if (normalized === 'delivered') return 'bg-emerald-600'
-  if (normalized === 'custom hold' || normalized === 'at customs') return 'bg-amber-500'
-  if (normalized === 'on hold') return 'bg-red-600'
-  return 'bg-red-600'
+  return resolveStatusColor(status).dot
 }
 
 function progressSegmentClass(index) {
   const nextStep = progressSteps.value[index]
   if (!nextStep?.done) return 'bg-slate-200 dark:bg-slate-700'
-  if (nextStep.label === holdStatus.value) return 'bg-amber-500'
-  if (nextStep.label === deliveredStatus.value) return 'bg-emerald-600'
-  return 'bg-red-600'
+  return resolveStatusColor(nextStep.label).seg
 }
 
 function placeLine(track) {

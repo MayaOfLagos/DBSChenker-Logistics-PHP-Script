@@ -239,16 +239,39 @@
                         <div class="col-lg-6">
                             <div class="card border">
                                 <div class="card-header bg-light">
-                                    <h6 class="mb-0"><i class="bi bi-signpost-split me-2"></i>Shipment Statuses</h6>
+                                    <h6 class="mb-0"><i class="bi bi-signpost-split me-2"></i>Shipment Statuses &amp; Colors</h6>
                                 </div>
                                 <div class="card-body">
                                     @php
-                                        $statusLabels = ['1st — Initial / Confirmed', '2nd — In Progress', '3rd — In Transit', '4th — Hold / Warning (amber)', '5th — Final / Delivered (green)'];
+                                        $statusLabels = ['1st — Initial / Confirmed', '2nd — In Progress', '3rd — In Transit', '4th — Hold / Warning', '5th — Final / Delivered'];
+                                        $colorOptions = [
+                                            'blue'    => ['label' => 'Blue',    'hex' => '#3b82f6'],
+                                            'emerald' => ['label' => 'Green',   'hex' => '#10b981'],
+                                            'amber'   => ['label' => 'Amber',   'hex' => '#f59e0b'],
+                                            'red'     => ['label' => 'Red',     'hex' => '#ef4444'],
+                                            'purple'  => ['label' => 'Purple',  'hex' => '#8b5cf6'],
+                                            'orange'  => ['label' => 'Orange',  'hex' => '#f97316'],
+                                            'slate'   => ['label' => 'Grey',    'hex' => '#64748b'],
+                                        ];
                                     @endphp
                                     @foreach($shipmentStatuses as $i => $status)
-                                    <div class="mb-3">
+                                    @php $currentColor = $statusColors[$i] ?? 'blue'; @endphp
+                                    <div class="mb-4">
                                         <label class="form-label fw-semibold">{{ $statusLabels[$i] ?? ($i+1) . 'th Status' }}</label>
-                                        <input type="text" class="form-control" name="status_{{ $i+1 }}" value="{{ $status }}" required>
+                                        <input type="text" class="form-control mb-2" name="status_{{ $i+1 }}" value="{{ $status }}" required>
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <span class="text-muted small">Color:</span>
+                                            @foreach($colorOptions as $colorKey => $colorMeta)
+                                            <label class="d-flex align-items-center gap-1 mb-0" style="cursor:pointer">
+                                                <input type="radio" name="color_{{ $i+1 }}" value="{{ $colorKey }}"
+                                                       {{ $currentColor === $colorKey ? 'checked' : '' }}
+                                                       class="d-none status-color-radio">
+                                                <span class="status-swatch {{ $currentColor === $colorKey ? 'swatch-active' : '' }}"
+                                                      style="background:{{ $colorMeta['hex'] }};width:22px;height:22px;border-radius:50%;display:inline-block;border:2px solid {{ $currentColor === $colorKey ? '#000' : 'transparent' }};box-shadow:{{ $currentColor === $colorKey ? '0 0 0 2px #fff,0 0 0 4px '.$colorMeta['hex'] : 'none' }};transition:all .15s"
+                                                      title="{{ $colorMeta['label'] }}"></span>
+                                            </label>
+                                            @endforeach
+                                        </div>
                                     </div>
                                     @endforeach
                                 </div>
@@ -290,6 +313,8 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+    // ── SMTP toggle ───────────────────────────────────────────────────────────
     var sendmailRadio = document.getElementById('sendmailserver');
     var smtpRadio = document.getElementById('smtpserver');
     var smtpFields = document.querySelectorAll('.smtp');
@@ -305,6 +330,34 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sendmailRadio) sendmailRadio.addEventListener('change', toggleSmtp);
     if (smtpRadio) smtpRadio.addEventListener('change', toggleSmtp);
     toggleSmtp();
+
+    // ── Status color swatches ─────────────────────────────────────────────────
+    var colorMap = {
+        blue:    '#3b82f6',
+        emerald: '#10b981',
+        amber:   '#f59e0b',
+        red:     '#ef4444',
+        purple:  '#8b5cf6',
+        orange:  '#f97316',
+        slate:   '#64748b',
+    };
+
+    document.querySelectorAll('.status-color-radio').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            // reset all swatches in the same group
+            var name = radio.name;
+            document.querySelectorAll('input[name="' + name + '"]').forEach(function(r) {
+                var swatch = r.nextElementSibling;
+                swatch.style.border = '2px solid transparent';
+                swatch.style.boxShadow = 'none';
+            });
+            // highlight selected
+            var hex = colorMap[radio.value] || '#3b82f6';
+            var sel = radio.nextElementSibling;
+            sel.style.border = '2px solid #000';
+            sel.style.boxShadow = '0 0 0 2px #fff, 0 0 0 4px ' + hex;
+        });
+    });
 });
 </script>
 @endpush

@@ -14,6 +14,7 @@ class Settings extends Model
         'should_cancel_plan'  => 'boolean',
         'modules'             => 'array',
         'shipment_statuses'   => 'array',
+        'status_colors'       => 'array',
         'freight_types'       => 'array',
     ];
 
@@ -26,6 +27,11 @@ class Settings extends Model
             'Custom Hold',
             'Delivered',
         ];
+    }
+
+    public function getStatusColorsWithDefault(): array
+    {
+        return $this->status_colors ?? ['blue', 'blue', 'blue', 'amber', 'emerald'];
     }
 
     public function getFreightTypesWithDefault(): array

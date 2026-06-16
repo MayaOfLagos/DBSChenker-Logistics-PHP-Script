@@ -32,11 +32,18 @@ export const useSettingsStore = defineStore('settings', () => {
     const logoDarkUrl  = computed(() => data.value?.logo_dark_url  ?? data.value?.logo_url ?? null)
     const yearStarted = computed(() => data.value?.year_started ?? new Date().getFullYear())
     const googleTranslate = computed(() => data.value?.google_translate ?? 'off')
+    const shipmentStatuses = computed(() => data.value?.shipment_statuses?.length >= 2
+        ? data.value.shipment_statuses
+        : ['Order Confirmed', 'Picked by Courier', 'On The Way', 'Custom Hold', 'Delivered'])
+    const statusColors = computed(() => data.value?.status_colors?.length
+        ? data.value.status_colors
+        : ['blue', 'blue', 'blue', 'amber', 'emerald'])
 
     return {
         data, loaded, loading, fetch,
         siteName, siteTitle, contactEmail, phone, whatsapp, address,
         logoUrl, logoLightUrl, logoDarkUrl,
         yearStarted, googleTranslate,
+        shipmentStatuses, statusColors,
     }
 })
