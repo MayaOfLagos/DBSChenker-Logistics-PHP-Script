@@ -182,11 +182,11 @@
                             <label class="form-label">Mail Server</label>
                             <div class="d-flex gap-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="server" id="sendmailserver" value="sendmail" checked>
+                                    <input class="form-check-input" type="radio" name="server" id="sendmailserver" value="sendmail" {{ ($settings->mail_server ?? 'sendmail') === 'sendmail' ? 'checked' : '' }}>
                                     <label class="form-check-label" for="sendmailserver">Sendmail</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="server" id="smtpserver" value="smtp">
+                                    <input class="form-check-input" type="radio" name="server" id="smtpserver" value="smtp" {{ ($settings->mail_server ?? '') === 'smtp' ? 'checked' : '' }}>
                                     <label class="form-check-label" for="smtpserver">SMTP</label>
                                 </div>
                             </div>

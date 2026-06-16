@@ -53,7 +53,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app--MBOkYsC.js",
+    "file": "assets/app-BmitZgYG.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -242,7 +242,7 @@
     ]
   },
   "resources/js/pages/public/HomePage.vue": {
-    "file": "assets/HomePage-DL3yn3xH.js",
+    "file": "assets/HomePage-IZvIzI8V.js",
     "name": "HomePage",
     "src": "resources/js/pages/public/HomePage.vue",
     "isDynamicEntry": true,
@@ -253,7 +253,7 @@
       "_useLiveStats-1ARAgdlh.js"
     ],
     "css": [
-      "assets/HomePage-DDUca1sn.css"
+      "assets/HomePage-BgveQuQO.css"
     ]
   },
   "resources/js/pages/public/NotFoundPage.vue": {
