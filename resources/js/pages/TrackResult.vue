@@ -10,7 +10,7 @@
             <span class="hidden sm:inline">Track Another</span>
           </a>
           <div class="flex items-center gap-2">
-            <img v-if="settings.logo_url" :src="settings.logo_url" :alt="settings.site_name" class="h-8 w-auto max-w-[9rem] object-contain sm:h-9">
+            <img v-if="activeLogo" :src="activeLogo" :alt="settings.site_name" class="h-8 w-auto max-w-[9rem] object-contain sm:h-9">
             <span v-else class="text-sm font-bold text-slate-900 dark:text-white">{{ settings.site_name || 'Logistics' }}</span>
           </div>
           <button type="button" @click="toggleTheme"
@@ -311,6 +311,11 @@ const summary = ref({})
 const mapRef = ref(null)
 const isDark = ref(false)
 const isLive = ref(false)
+const activeLogo = computed(() =>
+  isDark.value
+    ? (settings.value?.logo_dark_url ?? settings.value?.logo_url ?? null)
+    : (settings.value?.logo_light_url ?? settings.value?.logo_url ?? null)
+)
 const activeTracking = ref('')  // tracking number used for polling
 let mapInstance = null
 let pollTimer = null

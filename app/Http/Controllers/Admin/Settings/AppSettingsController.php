@@ -85,8 +85,10 @@ class AppSettingsController extends Controller
     public function updatewebinfo(Request $request)
     {
         $this->validate($request, [
-            'logo' => 'nullable|image|mimes:jpg,jpeg,png|max:500',
-            'favicon' => 'nullable|image|mimes:jpg,jpeg,png,ico|max:500',
+            'logo'       => 'nullable|image|mimes:jpg,jpeg,png|max:500',
+            'logo_light' => 'nullable|image|mimes:jpg,jpeg,png|max:500',
+            'logo_dark'  => 'nullable|image|mimes:jpg,jpeg,png|max:500',
+            'favicon'    => 'nullable|image|mimes:jpg,jpeg,png,ico|max:500',
         ]);
 
         $settings = Settings::where('id', '=', '1')->first();
@@ -96,7 +98,21 @@ class AppSettingsController extends Controller
             Storage::disk('public')->delete($settings->logo);
             $path = $file->store('photos', 'public');
         } else {
-            $path  = $settings->logo;
+            $path = $settings->logo;
+        }
+
+        if ($request->hasfile('logo_light')) {
+            Storage::disk('public')->delete($settings->logo_light);
+            $pathLogoLight = $request->file('logo_light')->store('photos', 'public');
+        } else {
+            $pathLogoLight = $settings->logo_light;
+        }
+
+        if ($request->hasfile('logo_dark')) {
+            Storage::disk('public')->delete($settings->logo_dark);
+            $pathLogoDark = $request->file('logo_dark')->store('photos', 'public');
+        } else {
+            $pathLogoDark = $settings->logo_dark;
         }
 
         if ($request->hasfile('favicon')) {
@@ -117,6 +133,8 @@ class AppSettingsController extends Controller
                 'site_title' => $request['site_title'],
                 'install_type' => $request['install_type'],
                 'logo' => $path,
+                'logo_light' => $pathLogoLight,
+                'logo_dark'  => $pathLogoDark,
                 'merchant_key' => $request->merchant_key,
                 'favicon' => $pathfav,
                 'tawk_to' => strip_tags($request['tawk_to']),

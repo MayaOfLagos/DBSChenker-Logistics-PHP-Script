@@ -40,8 +40,9 @@
   <!--begin::Sidebar Brand-->
   <div class="sidebar-brand">
     <a href="{{ url('/admin/dashboard') }}" class="brand-link">
-      @if($settings->logo)
-        <img src="{{ asset('storage/' . $settings->logo) }}"
+      @php $sidebarLogo = $settings->logo_dark ?: $settings->logo; @endphp
+      @if($sidebarLogo)
+        <img src="{{ asset('storage/' . $sidebarLogo) }}"
           alt="{{ $settings->site_name }}"
           class="brand-image opacity-75 shadow">
       @else

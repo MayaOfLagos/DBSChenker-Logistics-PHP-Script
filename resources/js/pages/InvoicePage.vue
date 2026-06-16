@@ -10,7 +10,7 @@
         </router-link>
 
         <div class="flex items-center justify-center gap-3 justify-self-center">
-          <img v-if="settings.logo_url" :src="settings.logo_url" :alt="brandName" class="h-10 max-w-[12rem] object-contain">
+          <img v-if="settings.logo_light_url || settings.logo_url" :src="settings.logo_light_url || settings.logo_url" :alt="brandName" class="h-10 max-w-[12rem] object-contain">
           <span v-else class="text-sm font-bold text-slate-950">{{ brandName }}</span>
         </div>
 

@@ -84,12 +84,55 @@
                                 <img src="{{ asset('storage/' . $settings->favicon) }}" class="mt-2" style="height:40px;" alt="favicon">
                             @endif
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Site Logo</label>
-                            <input type="file" class="form-control" name="logo" accept="image/*">
-                            @if($settings->logo ?? null)
-                                <img src="{{ asset('storage/' . $settings->logo) }}" class="mt-2" style="height:40px;" alt="logo">
-                            @endif
+
+                        {{-- Logo group --}}
+                        <div class="col-12">
+                            <div class="card border mb-0">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0"><i class="bi bi-image me-2"></i>Site Logos</h6>
+                                    <small class="text-muted">Upload separate logos for light and dark backgrounds. The fallback logo is used anywhere a specific variant is not set.</small>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-semibold">Logo — Light Mode <small class="text-muted fw-normal">(dark-coloured, for white/light backgrounds)</small></label>
+                                            <input type="file" class="form-control" name="logo_light" accept="image/*">
+                                            @if($settings->logo_light)
+                                                <div class="mt-2 p-2 rounded border bg-white d-inline-block">
+                                                    <img src="{{ asset('storage/' . $settings->logo_light) }}" style="height:40px;object-fit:contain;" alt="Logo light">
+                                                </div>
+                                                <div class="mt-1"><small class="text-muted">{{ basename($settings->logo_light) }}</small></div>
+                                            @else
+                                                <p class="mt-2 text-muted small mb-0">Not uploaded — fallback logo will be used.</p>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-semibold">Logo — Dark Mode <small class="text-muted fw-normal">(light-coloured, for dark/coloured backgrounds)</small></label>
+                                            <input type="file" class="form-control" name="logo_dark" accept="image/*">
+                                            @if($settings->logo_dark)
+                                                <div class="mt-2 p-2 rounded border bg-dark d-inline-block">
+                                                    <img src="{{ asset('storage/' . $settings->logo_dark) }}" style="height:40px;object-fit:contain;" alt="Logo dark">
+                                                </div>
+                                                <div class="mt-1"><small class="text-muted">{{ basename($settings->logo_dark) }}</small></div>
+                                            @else
+                                                <p class="mt-2 text-muted small mb-0">Not uploaded — fallback logo will be used.</p>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-semibold">Logo — Fallback <small class="text-muted fw-normal">(used when no variant is uploaded)</small></label>
+                                            <input type="file" class="form-control" name="logo" accept="image/*">
+                                            @if($settings->logo)
+                                                <div class="mt-2 p-2 rounded border bg-light d-inline-block">
+                                                    <img src="{{ asset('storage/' . $settings->logo) }}" style="height:40px;object-fit:contain;" alt="Logo fallback">
+                                                </div>
+                                                <div class="mt-1"><small class="text-muted">{{ basename($settings->logo) }}</small></div>
+                                            @else
+                                                <p class="mt-2 text-muted small mb-0">No logo uploaded yet.</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">

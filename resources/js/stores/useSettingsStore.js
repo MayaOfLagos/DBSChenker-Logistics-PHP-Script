@@ -27,12 +27,16 @@ export const useSettingsStore = defineStore('settings', () => {
     const phone       = computed(() => data.value?.phone        ?? '')
     const whatsapp    = computed(() => data.value?.whatsapp     ?? '')
     const address     = computed(() => data.value?.locations    ?? '')
-    const logoUrl     = computed(() => data.value?.logo_url     ?? null)
+    const logoUrl      = computed(() => data.value?.logo_url       ?? null)
+    const logoLightUrl = computed(() => data.value?.logo_light_url ?? data.value?.logo_url ?? null)
+    const logoDarkUrl  = computed(() => data.value?.logo_dark_url  ?? data.value?.logo_url ?? null)
     const yearStarted = computed(() => data.value?.year_started ?? new Date().getFullYear())
     const googleTranslate = computed(() => data.value?.google_translate ?? 'off')
 
     return {
         data, loaded, loading, fetch,
-        siteName, siteTitle, contactEmail, phone, whatsapp, address, logoUrl, yearStarted, googleTranslate,
+        siteName, siteTitle, contactEmail, phone, whatsapp, address,
+        logoUrl, logoLightUrl, logoDarkUrl,
+        yearStarted, googleTranslate,
     }
 })

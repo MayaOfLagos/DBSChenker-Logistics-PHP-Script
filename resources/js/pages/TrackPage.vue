@@ -98,7 +98,10 @@ const loading = ref(false)
 const heroImage = 'https://images.pexels.com/photos/24244230/pexels-photo-24244230.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1280&fit=crop'
 
 const brandName = computed(() => settings.value.site_name || window.__SITE_NAME__ || 'Logistics')
-const brandLogo = computed(() => settings.value.logo_url || (settings.value.logo ? `/storage/${settings.value.logo}` : ''))
+const brandLogo = computed(() =>
+  settings.value.logo_dark_url || settings.value.logo_url ||
+  (settings.value.logo ? `/storage/${settings.value.logo}` : '')
+)
 const brandInitials = computed(() => {
   const source = brandName.value.trim() || 'L'
   return source

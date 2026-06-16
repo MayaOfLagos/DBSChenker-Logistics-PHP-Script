@@ -25,7 +25,7 @@
         <div class="relative z-10">
           <div class="grid grid-cols-[1fr_auto] gap-6 border-b-4 border-slate-950 pb-6">
             <div>
-              <img v-if="settings.logo_url" :src="settings.logo_url" :alt="brandName" class="h-14 max-w-[14rem] object-contain">
+              <img v-if="settings.logo_light_url || settings.logo_url" :src="settings.logo_light_url || settings.logo_url" :alt="brandName" class="h-14 max-w-[14rem] object-contain">
               <h1 v-else class="text-2xl font-black text-slate-950">{{ brandName }}</h1>
               <p class="mt-3 text-sm font-semibold text-slate-600">{{ settings.site_address || 'International Shipping & Logistics Services' }}</p>
               <p class="text-sm text-slate-600">{{ settings.contact_email }}</p>

@@ -7,7 +7,7 @@
           <div class="col-lg-3 col-md-6">
             <div class="footer-widget">
               <router-link to="/" class="footer-logo">
-                <img v-if="settings.logoUrl" :src="settings.logoUrl" alt="logo">
+                <img v-if="settings.logoDarkUrl" :src="settings.logoDarkUrl" alt="logo">
                 <span v-else class="fw-bold text-white">{{ settings.siteName }}</span>
               </router-link>
               <p>{{ settings.siteName }} specializes in efficient transport, warehousing and global distribution of goods.</p>

@@ -13,7 +13,7 @@
 
             <div class="text-center">
                 <a href="/">
-                    <img src="{{ asset('storage/' . $settings->logo) }}" alt="Logo" class="w-50">
+                    <img src="{{ asset('storage/' . ($settings->logo_light ?: $settings->logo)) }}" alt="Logo" class="w-50">
                 </a>
             </div>
             <!-- Title -->

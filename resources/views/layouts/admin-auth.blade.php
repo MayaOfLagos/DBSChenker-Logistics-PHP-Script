@@ -27,8 +27,9 @@
     {{-- Logo / Site name --}}
     <div class="login-logo mb-3">
       <a href="{{ url('/') }}">
-        @if($settings->logo)
-          <img src="{{ asset('storage/' . $settings->logo) }}"
+        @php $authLogo = $settings->logo_light ?: $settings->logo; @endphp
+        @if($authLogo)
+          <img src="{{ asset('storage/' . $authLogo) }}"
                alt="{{ $settings->site_name }}" style="max-height:60px; object-fit:contain;">
         @else
           <b>{{ $settings->site_name }}</b>
