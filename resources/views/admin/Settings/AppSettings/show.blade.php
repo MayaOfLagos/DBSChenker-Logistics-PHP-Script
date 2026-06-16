@@ -240,7 +240,6 @@
                             <div class="card border">
                                 <div class="card-header bg-light">
                                     <h6 class="mb-0"><i class="bi bi-signpost-split me-2"></i>Shipment Statuses</h6>
-                                    <small class="text-muted">These are shown in the shipment progress tracker. <strong>Order matters</strong> — the 4th slot is the "hold/warning" state and the 5th is the final "delivered" state.</small>
                                 </div>
                                 <div class="card-body">
                                     @php
@@ -261,7 +260,6 @@
                             <div class="card border">
                                 <div class="card-header bg-light">
                                     <h6 class="mb-0"><i class="bi bi-truck me-2"></i>Freight / Shipping Method Types</h6>
-                                    <small class="text-muted">Options shown in the "Shipping Method" dropdown when creating or editing shipments.</small>
                                 </div>
                                 <div class="card-body">
                                     @foreach($freightTypes as $i => $type)
@@ -271,11 +269,6 @@
                                     </div>
                                     @endforeach
                                 </div>
-                            </div>
-
-                            <div class="alert alert-info mt-3 mb-0">
-                                <i class="bi bi-info-circle me-1"></i>
-                                <strong>Note:</strong> Existing shipments retain their current status/freight labels. Changing a label here affects new selections going forward and the public tracking page display.
                             </div>
                         </div>
 
