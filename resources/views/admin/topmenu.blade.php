@@ -1,3 +1,9 @@
+<style>
+  .nav-logo-dark  { display: none; }
+  .nav-logo-light { display: block; }
+  [data-bs-theme="dark"] .nav-logo-light { display: none; }
+  [data-bs-theme="dark"] .nav-logo-dark  { display: block; }
+</style>
 <!--begin::Header-->
 <nav class="app-header navbar navbar-expand bg-body">
   <!--begin::Container-->
@@ -18,10 +24,30 @@
     </ul>
     <!--end::Start Navbar Links-->
 
+    <!--begin::Mobile Brand Logo-->
+    @php
+      $navLogoLight = $settings->logo_light ?: $settings->logo;
+      $navLogoDark  = $settings->logo_dark  ?: $settings->logo;
+    @endphp
+    <a href="{{ url('admin/dashboard') }}" class="navbar-brand d-lg-none mx-auto px-2" style="position:absolute;left:50%;transform:translateX(-50%);">
+      @if($navLogoLight)
+        <img src="{{ asset('storage/' . $navLogoLight) }}" alt="{{ $settings->site_name }}"
+             class="nav-logo-light" style="max-height:36px;width:auto;object-fit:contain;">
+      @endif
+      @if($navLogoDark)
+        <img src="{{ asset('storage/' . $navLogoDark) }}" alt="{{ $settings->site_name }}"
+             class="nav-logo-dark" style="max-height:36px;width:auto;object-fit:contain;">
+      @endif
+      @if(!$navLogoLight && !$navLogoDark)
+        <span class="fw-bold">{{ $settings->site_name }}</span>
+      @endif
+    </a>
+    <!--end::Mobile Brand Logo-->
+
     <!--begin::End Navbar Links-->
     <ul class="navbar-nav ms-auto">
       <!--begin::Fullscreen Toggle-->
-      <li class="nav-item">
+      <li class="nav-item d-none d-md-block">
         <a class="nav-link" href="#" data-lte-toggle="fullscreen">
           <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
           <i data-lte-icon="minimize" class="bi bi-fullscreen-exit d-none"></i>
