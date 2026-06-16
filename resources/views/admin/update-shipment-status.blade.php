@@ -71,6 +71,12 @@
                         <textarea class="form-control" name="comment" rows="4" required>{{ old('comment') }}</textarea>
                         <small class="text-muted">This will be visible to the customer</small>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Delivery Progress (%) <small class="text-muted fw-normal"></small></label>
+                        <input type="number" class="form-control" name="percentage_complete"
+                               value="{{ old('percentage_complete', $shipment->percentage_complete) }}"
+                               min="0" max="100" placeholder="{{ $shipment->percentage_complete ?? 0 }}">
+                    </div>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" name="notify_customer" value="1" id="notify_customer" checked>
                         <label class="form-check-label" for="notify_customer">Send email notification to customer</label>

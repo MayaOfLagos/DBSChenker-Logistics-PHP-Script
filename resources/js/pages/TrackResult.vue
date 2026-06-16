@@ -69,11 +69,14 @@
                   </span>
                 </p>
               </div>
-              <!-- Total due -->
+              <!-- Shipment Status -->
               <div class="mt-4 flex items-center gap-3 lg:mt-0 lg:shrink-0">
                 <div class="rounded-xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur-md sm:px-5 sm:py-4">
-                  <p class="text-[10px] font-semibold uppercase tracking-wider text-white/50">Total Due</p>
-                  <p class="mt-0.5 text-2xl font-bold text-white sm:text-3xl">{{ currency }}{{ fmt(totalDue) }}</p>
+                  <p class="text-[10px] font-semibold uppercase tracking-wider text-white/50">Shipment Status</p>
+                  <p class="mt-1.5 text-xl font-black text-white sm:text-2xl">{{ courier.status || 'In Processing' }}</p>
+                  <span :class="statusPillClass(courier.status, true)" class="mt-2 inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold sm:text-xs">
+                    {{ courier.status || 'In Processing' }}
+                  </span>
                 </div>
                 <img :src="stampImage" alt="" class="h-16 w-16 rotate-[-8deg] object-contain opacity-40 sm:h-20 sm:w-20 lg:h-24 lg:w-24">
               </div>
@@ -82,22 +85,12 @@
 
           <!-- ══ MOBILE QUICK ACTIONS ════════════════════════════════════════════ -->
           <div class="mb-4 flex flex-col gap-2 sm:hidden no-print">
-            <router-link v-if="totalDue > 0" :to="{ name: 'deposits', query: { courier_id: courier.id } }"
-              class="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3.5 text-sm font-bold text-white shadow-sm active:scale-[0.98]">
-              <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              Pay Clearance — {{ currency }}{{ fmt(totalDue) }}
-            </router-link>
-            <div class="grid grid-cols-2 gap-2">
-              <router-link :to="{ name: 'printinvoice', params: { id: courier.id } }"
-                class="flex items-center justify-center gap-1.5 rounded-xl bg-white py-3 text-xs font-bold text-slate-700 ring-1 ring-slate-200 active:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-700">
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>
-                Print
-              </router-link>
-              <router-link :to="{ name: 'invoice', params: { id: courier.id } }"
-                class="flex items-center justify-center gap-1.5 rounded-xl bg-white py-3 text-xs font-bold text-slate-700 ring-1 ring-slate-200 active:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:ring-slate-700">
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/></svg>
-                Invoice
-              </router-link>
+            <div class="flex w-full items-center justify-between gap-2 rounded-xl bg-slate-800 px-4 py-3.5 text-sm text-white shadow-sm">
+              <span class="flex items-center gap-2 font-medium text-slate-300">
+                <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Expected Delivery
+              </span>
+              <span class="font-bold">{{ formatDateTime(courier.expected_delivery) }}</span>
             </div>
           </div>
 
@@ -107,9 +100,9 @@
               <h2 class="text-sm font-bold text-slate-900 dark:text-white sm:text-base">Shipment Progress</h2>
               <div class="flex items-center gap-2">
                 <div class="h-1.5 w-20 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800 sm:w-32">
-                  <div class="h-1.5 rounded-full bg-red-600 transition-all duration-700" :style="{ width: `${courier.percentage_complete || progressPercent}%` }"></div>
+                  <div class="h-1.5 rounded-full bg-red-600 transition-all duration-700" :style="{ width: `${courier.percentage_complete ?? progressPercent}%` }"></div>
                 </div>
-                <span class="text-xs font-bold tabular-nums text-slate-500 dark:text-slate-400">{{ courier.percentage_complete || progressPercent }}%</span>
+                <span class="text-xs font-bold tabular-nums text-slate-500 dark:text-slate-400">{{ courier.percentage_complete ?? progressPercent }}%</span>
               </div>
             </div>
 
@@ -264,10 +257,6 @@
                 <router-link :to="{ name: 'printinvoice', params: { id: courier.id } }" class="btn-secondary">
                   <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>
                   Print Receipt
-                </router-link>
-                <router-link v-if="totalDue > 0" :to="{ name: 'deposits', query: { courier_id: courier.id } }" class="btn-primary bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500">
-                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                  Pay Clearance Fee ({{ currency }}{{ fmt(totalDue) }})
                 </router-link>
                 <router-link :to="{ name: 'invoice', params: { id: courier.id } }" class="btn-secondary">View Invoice</router-link>
               </div>

@@ -78,8 +78,7 @@ class ShipmentController extends Controller
         $shipment->date_shipped = $request->date_shipped;
         $shipment->expected_delivery = $request->expected_delivery;
         $shipment->freight_type = $request->freight_type;
-
-
+        $shipment->percentage_complete = $request->percentage_complete ?? 0;
 
         // Handle photo upload if provided
         if ($request->hasFile('photo')) {
@@ -302,10 +301,8 @@ class ShipmentController extends Controller
 
         User::where('id', $request->shipment_id)
             ->update([
-
                 'location' => $request->location,
-                'percentage_complete' => $request['percentage_complete'],
-
+                'percentage_complete' => $request->input('percentage_complete', $shipment->percentage_complete),
             ]);
 
 

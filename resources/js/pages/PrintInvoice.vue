@@ -67,7 +67,6 @@
                   <th class="px-4 py-3 text-left font-black">Description</th>
                   <th class="px-4 py-3 text-left font-black">Shipping Cost</th>
                   <th class="px-4 py-3 text-left font-black">Clearance Cost</th>
-                  <th class="px-4 py-3 text-left font-black">Total Cost</th>
                 </tr>
               </thead>
               <tbody>
@@ -77,7 +76,6 @@
                   <td class="px-4 py-4">{{ courier.description || 'Shipment parcel' }}</td>
                   <td class="px-4 py-4">{{ currency }}{{ fmt(shippingCost) }}</td>
                   <td class="px-4 py-4">{{ currency }}{{ fmt(clearanceCost) }}</td>
-                  <td class="px-4 py-4 font-black">{{ currency }}{{ fmt(totalDue) }}</td>
                 </tr>
               </tbody>
             </table>
@@ -97,12 +95,6 @@
               <dl class="space-y-3 p-5 text-sm">
                 <MoneyRow label="Shipping Cost" :value="`${currency}${fmt(shippingCost)}`" />
                 <MoneyRow label="Clearance Cost" :value="`${currency}${fmt(clearanceCost)}`" />
-                <div class="border-t-2 border-slate-950 pt-3">
-                  <div class="flex items-center justify-between gap-4">
-                    <dt class="font-black text-slate-950">Total Amount</dt>
-                    <dd class="text-2xl font-black text-red-600">{{ currency }}{{ fmt(totalDue) }}</dd>
-                  </div>
-                </div>
               </dl>
             </section>
           </div>

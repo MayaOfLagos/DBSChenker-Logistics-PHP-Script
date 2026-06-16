@@ -188,7 +188,7 @@
                 <div class="mb-3">
                     <label class="form-label">Delivery Progress (%)</label>
                     <input type="number" class="form-control" name="percentage_complete"
-                        value="{{ old('percentage_complete', $shipment->percentage_complete) }}" min="0" max="100">
+                        value="{{ old('percentage_complete', $shipment->percentage_complete) }}" min="0" max="100" step="1">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Date Shipped <span class="text-danger">*</span></label>

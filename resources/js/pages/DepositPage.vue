@@ -28,9 +28,6 @@
           <div class="text-right space-y-0.5">
             <p class="text-xs text-blue-700">Shipping: <span class="font-medium">{{ currency }}{{ fmt(invoice.summary.shipping_cost) }}</span></p>
             <p class="text-xs text-blue-700">Clearance: <span class="font-medium">{{ currency }}{{ fmt(invoice.summary.clearance_cost) }}</span></p>
-            <p class="text-sm font-bold text-blue-900 border-t border-blue-200 pt-0.5 mt-1">
-              Total due: {{ currency }}{{ fmt(invoice.summary.total_due) }}
-            </p>
           </div>
         </div>
       </div>
@@ -127,10 +124,6 @@
                 <span class="font-semibold">{{ currency }}{{ fmt(percentageFee) }}</span>
               </div>
             </template>
-            <div class="flex justify-between border-t border-gray-100 pt-3">
-              <span class="font-semibold text-gray-900">Total to send</span>
-              <span class="font-bold text-red-600 text-base">{{ currency }}{{ fmt(totalDue) }}</span>
-            </div>
             <div v-if="form.tracking" class="flex justify-between pt-1">
               <span class="text-gray-500">Tracking</span>
               <span class="font-mono text-xs font-semibold uppercase tracking-wide">{{ form.tracking }}</span>

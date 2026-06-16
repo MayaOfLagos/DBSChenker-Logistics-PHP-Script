@@ -158,9 +158,9 @@
                     <option value="Unpaid" {{ old('cstatus') == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
                 </select>
             </div>
-            <div class="col-md-12">
-                <label class="form-label">Delivery Percentage Completed</label>
-                <input type="number" class="form-control" name="percentage_complete" value="{{ old('percentage_complete', 0) }}" min="0" max="100">
+            <div class="col-md-6">
+                <label class="form-label">Delivery Progress (%)</label>
+                <input type="number" class="form-control" name="percentage_complete" value="{{ old('percentage_complete', 0) }}" min="0" max="100" step="1">
             </div>
         </div>
     </div>

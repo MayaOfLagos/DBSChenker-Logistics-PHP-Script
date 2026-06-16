@@ -44,11 +44,6 @@
               </p>
             </div>
 
-            <div class="rounded-lg border border-white/15 bg-white/10 p-4 text-right backdrop-blur">
-              <p class="text-xs font-bold uppercase text-white/55">Total Amount Due</p>
-              <p class="mt-2 text-3xl font-black">{{ currency }}{{ fmt(totalDue) }}</p>
-              <p class="mt-1 text-xs text-white/55">Shipping + clearance</p>
-            </div>
           </div>
         </div>
 
@@ -80,7 +75,6 @@
                       <th class="px-4 py-3 text-left font-bold">Description</th>
                       <th class="px-4 py-3 text-left font-bold">Shipping</th>
                       <th class="px-4 py-3 text-left font-bold">Clearance</th>
-                      <th class="px-4 py-3 text-left font-bold">Total</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-200">
@@ -95,7 +89,6 @@
                       <td class="px-4 py-4">{{ courier.description || 'Shipment parcel' }}</td>
                       <td class="px-4 py-4">{{ currency }}{{ fmt(shippingCost) }}</td>
                       <td class="px-4 py-4">{{ currency }}{{ fmt(clearanceCost) }}</td>
-                      <td class="px-4 py-4 font-black">{{ currency }}{{ fmt(totalDue) }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -118,12 +111,6 @@
                 <SummaryRow label="Shipment Cost" :value="`${currency}${fmt(shippingCost)}`" />
                 <SummaryRow label="Clearance Cost" :value="`${currency}${fmt(clearanceCost)}`" />
                 <SummaryRow label="Booking Mode" value="ToPay" />
-                <div class="border-t border-dashed border-slate-200 pt-4">
-                  <div class="flex items-center justify-between">
-                    <dt class="font-bold text-slate-800">Total Amount</dt>
-                    <dd class="text-2xl font-black text-red-600">{{ currency }}{{ fmt(totalDue) }}</dd>
-                  </div>
-                </div>
               </dl>
             </section>
 

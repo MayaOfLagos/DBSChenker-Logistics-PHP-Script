@@ -106,9 +106,6 @@
             <dl class="mt-4 space-y-3 text-sm">
               <MoneyLine label="Shipping" :value="`${shipmentCurrency}${fmt(shippingCost)}`" />
               <MoneyLine label="Clearance" :value="`${shipmentCurrency}${fmt(clearanceCost)}`" />
-              <div class="border-t border-dashed border-slate-200 pt-3">
-                <MoneyLine label="Total Due" :value="`${shipmentCurrency}${fmt(totalDue)}`" strong />
-              </div>
             </dl>
           </div>
         </section>
