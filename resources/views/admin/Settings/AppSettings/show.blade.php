@@ -90,12 +90,11 @@
                             <div class="card border mb-0">
                                 <div class="card-header bg-light py-2">
                                     <h6 class="mb-0"><i class="bi bi-image me-2"></i>Site Logos</h6>
-                                    <small class="text-muted">Upload separate logos for light and dark backgrounds. The fallback logo is used anywhere a specific variant is not set.</small>
                                 </div>
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-md-4">
-                                            <label class="form-label fw-semibold">Logo — Light Mode <small class="text-muted fw-normal">(dark-coloured, for white/light backgrounds)</small></label>
+                                            <label class="form-label fw-semibold">Logo — Light Mode <small class="text-muted fw-normal"></small></label>
                                             <input type="file" class="form-control" name="logo_light" accept="image/*">
                                             @if($settings->logo_light)
                                                 <div class="mt-2 p-2 rounded border bg-white d-inline-block">
@@ -103,11 +102,11 @@
                                                 </div>
                                                 <div class="mt-1"><small class="text-muted">{{ basename($settings->logo_light) }}</small></div>
                                             @else
-                                                <p class="mt-2 text-muted small mb-0">Not uploaded — fallback logo will be used.</p>
+                                                <p class="mt-2 text-muted small mb-0">Not uploaded.</p>
                                             @endif
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label fw-semibold">Logo — Dark Mode <small class="text-muted fw-normal">(light-coloured, for dark/coloured backgrounds)</small></label>
+                                            <label class="form-label fw-semibold">Logo — Dark Mode <small class="text-muted fw-normal"></small></label>
                                             <input type="file" class="form-control" name="logo_dark" accept="image/*">
                                             @if($settings->logo_dark)
                                                 <div class="mt-2 p-2 rounded border bg-dark d-inline-block">
@@ -115,11 +114,11 @@
                                                 </div>
                                                 <div class="mt-1"><small class="text-muted">{{ basename($settings->logo_dark) }}</small></div>
                                             @else
-                                                <p class="mt-2 text-muted small mb-0">Not uploaded — fallback logo will be used.</p>
+                                                <p class="mt-2 text-muted small mb-0">Not uploaded.</p>
                                             @endif
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label fw-semibold">Logo — Fallback <small class="text-muted fw-normal">(used when no variant is uploaded)</small></label>
+                                            <label class="form-label fw-semibold">Logo — Fallback <small class="text-muted fw-normal"></small></label>
                                             <input type="file" class="form-control" name="logo" accept="image/*">
                                             @if($settings->logo)
                                                 <div class="mt-2 p-2 rounded border bg-light d-inline-block">
