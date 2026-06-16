@@ -114,6 +114,12 @@
   <!-- Mobile Nav -->
   <div class="mobile-navigation-menu" :class="{ 'open-mobile-menu': mobileOpen }">
     <button id="mobile-menu-close" @click="closeMobileMenu"><i class="fa-regular fa-xmark"></i></button>
+    <div class="mobile-menu-logo">
+      <router-link to="/" @click="closeMobileMenu">
+        <img v-if="settings.logoLightUrl" :src="settings.logoLightUrl" alt="DB Schenker" />
+        <span v-else class="fw-bold fs-5">{{ settings.siteName }}</span>
+      </router-link>
+    </div>
     <ul class="nav-menu">
       <li><router-link to="/" @click="closeMobileMenu">Home</router-link></li>
       <li class="dropdown_menu">
@@ -207,6 +213,18 @@ watch(route, () => { closeSearch(); closeMobileMenu() })
 </script>
 
 <style scoped>
+/* ── Mobile menu logo ──────────────────────────────────────────────────── */
+.mobile-menu-logo {
+  padding: 20px 20px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 10px;
+}
+.mobile-menu-logo img {
+  max-height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
 /* ── Complaints trigger button ─────────────────────────────────────────── */
 .complaint-trigger-btn {
   display: inline-flex;
