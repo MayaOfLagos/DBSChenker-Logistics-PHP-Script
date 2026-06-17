@@ -446,12 +446,15 @@ class HomeController extends Controller
 
     public function customer()
     {
-        return view('admin.customer')
-            ->with(array(
-                'users' => User::orderby('id', 'desc')->where('cstatus', 'Customer')->get(),
-                'title' => 'Manage shipments',
+        $shipments = User::whereNotNull('trackingnumber')->orderBy('id', 'desc')->get();
 
-            ));
+        return view('admin.customer')
+            ->with([
+                'users'     => User::orderby('id', 'desc')->where('cstatus', 'Customer')->get(),
+                'senders'   => $shipments,
+                'receivers' => $shipments,
+                'title'     => 'Customers',
+            ]);
     }
 
 

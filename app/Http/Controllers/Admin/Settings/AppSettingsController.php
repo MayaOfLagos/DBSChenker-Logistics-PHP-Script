@@ -96,21 +96,21 @@ class AppSettingsController extends Controller
 
         if ($request->hasfile('logo')) {
             $file = $request->file('logo');
-            Storage::disk('public')->delete($settings->logo);
+            if ($settings->logo) Storage::disk('public')->delete($settings->logo);
             $path = $file->store('photos', 'public');
         } else {
             $path = $settings->logo;
         }
 
         if ($request->hasfile('logo_light')) {
-            Storage::disk('public')->delete($settings->logo_light);
+            if ($settings->logo_light) Storage::disk('public')->delete($settings->logo_light);
             $pathLogoLight = $request->file('logo_light')->store('photos', 'public');
         } else {
             $pathLogoLight = $settings->logo_light;
         }
 
         if ($request->hasfile('logo_dark')) {
-            Storage::disk('public')->delete($settings->logo_dark);
+            if ($settings->logo_dark) Storage::disk('public')->delete($settings->logo_dark);
             $pathLogoDark = $request->file('logo_dark')->store('photos', 'public');
         } else {
             $pathLogoDark = $settings->logo_dark;
@@ -118,7 +118,7 @@ class AppSettingsController extends Controller
 
         if ($request->hasfile('favicon')) {
             $favfile = $request->file('favicon');
-            Storage::disk('public')->delete($settings->favicon);
+            if ($settings->favicon) Storage::disk('public')->delete($settings->favicon);
             $pathfav = $favfile->store('photos', 'public');
         } else {
             $pathfav = $settings->favicon;
